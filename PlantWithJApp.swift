@@ -11,7 +11,7 @@ import SwiftUI
 struct PlantWithJApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LaunchScreen()
         }
     }
 }
