@@ -8,5 +8,6 @@
 import SwiftUI
 
 extension Font {
-    static var buttonContentFont = Font.custom("Lora-Regulr", size: 18)
+    static var buttonContent = Font.system(size: 18, weight: .bold, design: .rounded)
+    static var basicText = Font.system(size: 14, weight: .light, design: .monospaced)
 }

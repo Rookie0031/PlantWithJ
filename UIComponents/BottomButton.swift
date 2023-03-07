@@ -18,7 +18,7 @@ struct BottomButton: View {
         } label: {
             Text(title)
                 .frame(width: 300, height: 50, alignment: .center)
-                .font(Font.buttonContentFont.bold())
+                .font(.buttonContent.bold())
                 .foregroundColor(.black)
                 .background(Color.mainGreen)
                 .cornerRadius(30)

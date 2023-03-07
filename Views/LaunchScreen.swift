@@ -9,24 +9,36 @@ import SwiftUI
 
 struct LaunchScreen: View {
     var body: some View {
-        NavigationStack {
+        NavigationView {
             VStack {
+                
+                Spacer()
+                
                 Image("PlantWihJoy")
                     .resizable()
                     .frame(width: 250, height: 250, alignment:.center)
                 
-                NavigationLink(destination: RegisterNewPlantView()) {
-                    BottomButton(title: "Start with my plant")
-                }
+                Spacer()
                 
+                NavigationLink(destination:
+                                RegisterNewPlantView().navigationBarBackButtonHidden()) {
+                    Text("Start with my own plant")
+                        .frame(width: 300, height: 60, alignment: .center)
+                        .font(Font.buttonContent.bold())
+                        .foregroundColor(.black)
+                        .background(Color.mainGreen)
+                        .cornerRadius(30)
+                }
             }
             .padding()
         }
     }
 }
 
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         LaunchScreen()
     }
 }
+
