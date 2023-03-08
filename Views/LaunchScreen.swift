@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct LaunchScreen: View {
+    @StateObject var dateViewModel: DateSelectViewModel = DateSelectViewModel()
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 
                 Spacer()
@@ -21,7 +22,7 @@ struct LaunchScreen: View {
                 Spacer()
                 
                 NavigationLink(destination:
-                                RegisterNewPlantView().navigationBarBackButtonHidden()) {
+                                RegisterNewPlantView(viewModel: dateViewModel).navigationBarBackButtonHidden()) {
                     Text("Start with my own plant")
                         .frame(width: 300, height: 60, alignment: .center)
                         .font(Font.buttonContent.bold())

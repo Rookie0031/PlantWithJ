@@ -9,5 +9,5 @@ import SwiftUI
 
 extension Font {
     static var buttonContent = Font.system(size: 18, weight: .bold, design: .rounded)
-    static var basicText = Font.system(size: 14, weight: .light, design: .monospaced)
+    static var basicText = Font.system(size: 15, weight: .light, design: .monospaced)
 }

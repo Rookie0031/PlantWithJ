@@ -9,6 +9,7 @@ import SwiftUI
 import PhotosUI
 
 struct RegisterNewPlantView: View {
+    @ObservedObject var viewModel: DateSelectViewModel
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
     
@@ -49,9 +50,7 @@ struct RegisterNewPlantView: View {
             
             PlantInfoSetHStackView(type: .textInfo, guideText: "Birthday", placeholer: "The date of seeding")
             
-            PlantInfoSetHStackView(type: .watering, guideText: "Water remind", placeholer: "The date of seeding")
-            
-            PlantInfoSetHStackView(type: .fertilizer, guideText: "Fertilizer remind", placeholer: "The date of seeding")
+            PlantWateringRemindStack(viewModel: viewModel, type: .reminder, guideText: "Water Remind")
             
             Spacer()
         }
@@ -64,7 +63,7 @@ struct RegisterNewPlantView: View {
 struct ContentView_Preview_Regiter: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            RegisterNewPlantView()
+            RegisterNewPlantView(viewModel: DateSelectViewModel())
         }
     }
 }

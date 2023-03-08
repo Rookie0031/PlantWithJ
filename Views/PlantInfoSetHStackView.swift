@@ -35,13 +35,6 @@ struct PlantInfoSetHStackView: View {
                     .font(.basicText.italic())
                     .background(Color.lightGray)
                     .cornerRadius(10)
-            } else {
-                NavigationLink {
-                    Text("")
-                } label: {
-                    Text("Click Here")
-                }
-
             }
         }
         .padding(.horizontal, 40)
@@ -50,6 +43,8 @@ struct PlantInfoSetHStackView: View {
 
 struct PlantInfoSetHStackView_Previews: PreviewProvider {
     static var previews: some View {
-        PlantInfoSetHStackView(type: .textInfo, guideText: "dasdas", placeholer: "dasdasdadasdads")
+        NavigationStack {
+            PlantInfoSetHStackView(type: .reminder, guideText: "dasdas", placeholer: "dasdasdadasdads")
+        }
     }
 }
