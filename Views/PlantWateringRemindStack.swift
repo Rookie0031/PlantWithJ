@@ -14,7 +14,7 @@ struct PlantWateringRemindStack: View {
     let guideText: String
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading, spacing: 20) {
             HStack {
                 Text(guideText)
                     .font(Font.basicText)
@@ -28,13 +28,16 @@ struct PlantWateringRemindStack: View {
             }
             .padding(.horizontal, 40)
             
-            VStack(spacing: 10) {
-                ForEach(viewModel.remindTimes, id: \.id) { data in
+            ForEach(viewModel.selectedRemindTimes, id: \.id) { data in
+                HStack {
+                    Image(systemName: "circle.fill")
+                        .foregroundColor(.mainGreen)
                     Text(data.day)
                         .font(.basicText)
-                    Text(data.time.formatted(date: .complete, time: .shortened))
+                    Text(data.time.formatted(date: .omitted, time: .shortened))
                         .font(.basicText)
                 }
+                .padding(.horizontal, 40)
             }
         }
     }

@@ -53,10 +53,16 @@ struct RegisterNewPlantView: View {
             PlantWateringRemindStack(viewModel: viewModel, type: .reminder, guideText: "Water Remind")
             
             Spacer()
+            
+            NavigationLink {
+                Text("dasdas")
+            } label: {
+                BottomButtonUI(title: "Next")
+            }
+
         }
         .navigationTitle("Add your plant")
         .navigationBarTitleDisplayMode(.inline)
-        
     }
 }
 

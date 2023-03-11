@@ -10,5 +10,6 @@ import Foundation
 struct ReminderTimeModel: Identifiable {
     let id: String = UUID().uuidString
     let day: String
-    let time: Date
+    var isSelected: Bool = false
+    var time: Date
 }

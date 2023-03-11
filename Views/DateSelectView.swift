@@ -10,31 +10,29 @@ import SwiftUI
 struct DateSelectView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: DateSelectViewModel
-    private let components: [WeekdayHstack] = [WeekdayHstack(dayText: "Monday"),
-                                               WeekdayHstack(dayText: "Tuesday"),
-                                               WeekdayHstack(dayText: "Wednesday"),
-                                               WeekdayHstack(dayText: "Thursday"),
-                                               WeekdayHstack(dayText: "Friday"),
-                                               WeekdayHstack(dayText: "Saturday"),
-                                               WeekdayHstack(dayText: "Sunday")]
+    private let weekDays: [String] = ["Monday", "Tuesday", "Wednesday", "Thurday", "Friday", "Saturday", "Sunday"]
     
     var body: some View {
         
         VStack(spacing: 40) {
-            ForEach(components, id: \.id) { component in
-                component
-            }
+            WeekdayHstack(isSelected: $viewModel.remindTimes[0].isSelected, selectedDate: $viewModel.remindTimes[0].time, dayText: "Monday")
+            
+            WeekdayHstack(isSelected: $viewModel.remindTimes[1].isSelected, selectedDate: $viewModel.remindTimes[1].time, dayText: "Tuesday")
+            
+            WeekdayHstack(isSelected: $viewModel.remindTimes[2].isSelected, selectedDate: $viewModel.remindTimes[2].time, dayText: "Wednesday")
+            
+            WeekdayHstack(isSelected: $viewModel.remindTimes[3].isSelected, selectedDate: $viewModel.remindTimes[3].time, dayText: "Thurday")
+            
+            WeekdayHstack(isSelected: $viewModel.remindTimes[4].isSelected, selectedDate: $viewModel.remindTimes[4].time, dayText: "Friday")
+            
+            WeekdayHstack(isSelected: $viewModel.remindTimes[5].isSelected, selectedDate: $viewModel.remindTimes[5].time, dayText: "Saturday")
+            
+            WeekdayHstack(isSelected: $viewModel.remindTimes[6].isSelected, selectedDate: $viewModel.remindTimes[6].time, dayText: "Sunday")
             
             Spacer()
             
             BottomButton(title: "Complete") {
-                components.filter({ $0.isSelected }).forEach { component in
-                    let remindTime: ReminderTimeModel = ReminderTimeModel(day: component.dayText, time: component.selectedDate)
-                    var remindTimeList: [ReminderTimeModel] = []
-                    remindTimeList.append(remindTime)
-                    viewModel.remindTimes = remindTimeList
-                    print(viewModel.remindTimes)
-                }
+                viewModel.selectedRemindTimes = viewModel.remindTimes.filter { $0.isSelected }
                 presentationMode.wrappedValue.dismiss()
             }
         }
@@ -44,12 +42,11 @@ struct DateSelectView: View {
     }
 }
 
-struct WeekdayHstack: View, Identifiable {
+struct WeekdayHstack: View {
     
-    let id: String = UUID().uuidString
+    @Binding var isSelected: Bool
+    @Binding var selectedDate: Date
     let dayText: String
-    @State var isSelected: Bool = false
-    @State var selectedDate = Date()
     
     var body: some View {
         HStack(spacing: 15) {
