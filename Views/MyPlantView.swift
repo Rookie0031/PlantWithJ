@@ -23,13 +23,22 @@ struct MyPlantView: View {
         GridItem(.adaptive(minimum: 150))
     ]
     
+    init() {
+        //Use this if NavigationBarTitle is with Large Font
+        UINavigationBar.appearance().largeTitleTextAttributes = [.font : UIFont(name: "Georgia-Bold", size: 26)!]
+
+        //Use this if NavigationBarTitle is with displayMode = .inline
+        //UINavigationBar.appearance().titleTextAttributes = [.font : UIFont(name: "Georgia-Bold", size: 20)!]
+    }
+    
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 10) {
                 ForEach(items, id: \.self) { item in
                     NavigationLink {
-                        Text("Diary")
-                            .navigationTitle(item.title)
+                        DetailPlantView()
+                            .navigationTitle("")
+                            .navigationBarTitleDisplayMode(.inline)
                     } label: {
                         VStack(alignment: .center, spacing: 8) {
                             Image(item.image)
@@ -46,7 +55,7 @@ struct MyPlantView: View {
                                 
                                 Text(item.subtitle)
                                     .font(.subheadline)
-                                    .foregroundColor(.mainGreen)
+                                    .foregroundColor(.deepGreen)
                             }
                         }
                         .padding()
@@ -58,7 +67,7 @@ struct MyPlantView: View {
             }
             .padding()
         }
-        .navigationTitle("Growing Plants")
+        .navigationTitle("Growing Plants").font(.largeTitleText)
     }
 }
 

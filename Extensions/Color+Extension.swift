@@ -36,9 +36,11 @@ extension Color {
 
 extension Color {
     static let mainGreen : Color = Color(hex: "CDD9C1")
+    static let deepGreen: Color = Color(hex: "#83A785")
     static let mainWhite :Color = Color(hex: "F5F5F5")
     static let mainOrange : Color = Color(hex: "E0C8A4")
     static let mainBlue :Color = Color(hex: "#E0C8A4")
     static let lightGray: Color = Color(hex: "#F9F9F9")
+    static let textLightGray: Color = Color(hex: "#8C8A89")
 }
 
