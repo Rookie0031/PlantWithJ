@@ -48,14 +48,15 @@ struct RegisterNewPlantView: View {
             
             PlantInfoSetHStackView(type: .textInfo, guideText: "Species", placeholer: "Species of plant")
             
-            PlantInfoSetHStackView(type: .textInfo, guideText: "Birthday", placeholer: "The date of seeding")
+            PlantBirthDaySetHstackView(guideText: "Birthday")
             
             PlantWateringRemindStack(viewModel: viewModel, type: .reminder, guideText: "Water Remind")
             
             Spacer()
             
             NavigationLink {
-                Text("dasdas")
+                FirstRegisteringLaunchScreen()
+                    .navigationBarBackButtonHidden()
             } label: {
                 BottomButtonUI(title: "Next")
             }

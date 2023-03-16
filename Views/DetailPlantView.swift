@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct DetailPlantView: View {
+    let plantData: PlantInformationModel
     var body: some View {
         ScrollView(.vertical) {
             LazyVStack(alignment: .leading,spacing: 30) {
-                PlantProfileCardView()
+                PlantProfileCardView(data: plantData)
                 
                 VStack {
                     HStack {
@@ -20,18 +21,19 @@ struct DetailPlantView: View {
                         
                         Spacer()
                         
-                        Button {
-                            print("")
+                        NavigationLink {
+                            DiaryWritingView()
                         } label: {
-                            Image(systemName: "pencil.circle")
+                            Image(systemName: "plus.circle")
                                 .resizable()
                                 .frame(width: 20, height: 20, alignment: .center)
                                 .foregroundColor(.deepGreen)
+
                         }
                     }
                     .padding(.horizontal, 30)
                     
-                    DiaryHScrollView()
+                    DiaryHScrollView(diarySet: TestData.dummyDiary)
                         .padding(.leading, 30)
                 }
             }
@@ -41,11 +43,12 @@ struct DetailPlantView: View {
 }
 
 struct PlantProfileCardView: View {
+    let data: PlantInformationModel
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            
+            //MARK: 여기 다른 데이터로 바꾸기
             HStack {
-                Text("Profile")
+                Text(data.name)
                     .font(.largeTitleText)
                 
                 Spacer()
@@ -60,28 +63,32 @@ struct PlantProfileCardView: View {
                 }
             }
             
-            VStack(alignment: .leading, spacing: 10) {
-                Image("PlantWihJoy")
+            VStack(alignment: .center, spacing: 20) {
+                Image(uiImage: UIImage(data: data.imageData) ?? UIImage())
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 200, height: 200, alignment: .center)
+                    .cornerRadius(10)
+                    .frame(width: 180, height: 180)
+                    .aspectRatio(contentMode: .fit)
                 
-                HStack(spacing: 10) {
-                    BlackText(text: "Species")
-                    BlackText(text: ":")
-                    LightGrayText(text: "dinosuar")
-                }
-                
-                HStack(spacing: 10) {
-                    BlackText(text: "Birthday")
-                    BlackText(text: ":")
-                    LightGrayText(text: "21:00")
-                }
-                
-                VStack(alignment: .leading ,spacing: 10) {
-                    BlackText(text: "Water Remind")
-                    LightGrayText(text: "Tue 21:00")
-                    LightGrayText(text: "Tue 21:00")
+                VStack(alignment: .leading) {
+                    HStack(spacing: 10) {
+                        BlackText(text: "Species")
+                        BlackText(text: ":")
+                        LightGrayText(text: data.species)
+                    }
+                    
+                    HStack(spacing: 10) {
+                        BlackText(text: "Birthday")
+                        BlackText(text: ":")
+                        LightGrayText(text: "\(data.birthDay)")
+                    }
+                    
+                    VStack(alignment: .leading ,spacing: 10) {
+                        BlackText(text: "Water Remind")
+                        ForEach(data.wateringDay, id: \.self) { data in
+                            LightGrayText(text: data.toDay())
+                        }
+                    }
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -96,7 +103,7 @@ struct PlantProfileCardView: View {
 struct DiaryView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            DetailPlantView()
+            DetailPlantView(plantData: TestData.dummyPlants.first!)
         }
     }
 }

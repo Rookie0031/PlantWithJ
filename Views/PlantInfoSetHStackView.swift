@@ -41,10 +41,32 @@ struct PlantInfoSetHStackView: View {
     }
 }
 
+struct PlantBirthDaySetHstackView: View {
+    @State private var selectedDate = Date()
+    let guideText: String
+    
+    @State var text: String = ""
+    var body: some View {
+        HStack {
+            Text(guideText)
+                .font(Font.basicText)
+            Spacer()
+            
+            DatePicker("Select a date", selection: $selectedDate, in: Date()..., displayedComponents: [.date])
+                .datePickerStyle(.compact)
+                .labelsHidden()
+        }
+        .padding(.horizontal, 40)
+    }
+}
+
 struct PlantInfoSetHStackView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            PlantInfoSetHStackView(type: .reminder, guideText: "dasdas", placeholer: "dasdasdadasdads")
+            VStack {
+                PlantInfoSetHStackView(type: .reminder, guideText: "dasdas", placeholer: "dasdasdadasdads")
+                PlantBirthDaySetHstackView(guideText: "dasdas")
+            }
         }
     }
 }

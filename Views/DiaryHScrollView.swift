@@ -8,43 +8,45 @@
 import SwiftUI
 
 struct DiaryHScrollView: View {
+    let diarySet: [DiaryDataModel]
     var body: some View {
             
         ScrollView(.horizontal) {
             LazyHStack(spacing: 20) {
-                PlantDiaryCardView()
-                PlantDiaryCardView()
-                PlantDiaryCardView()
+                ForEach(diarySet) { diary in
+                    PlantDiaryCardView(data: diary)
+                }
             }
         }
     }
 }
 
 struct PlantDiaryCardView: View {
+    let data: DiaryDataModel
     var body: some View {
             VStack(alignment: .center, spacing: 10) {
                     
-                    Text("07 May 2022")
+                Text(data.date.toHourAndMinute())
                         .font(.titleText)
                         .foregroundColor(.deepGreen)
                     
-                    Image("PlantWihJoy")
+                Image(uiImage: UIImage(data: data.image) ?? UIImage())
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 200, height: 200, alignment: .center)
                     
-                    LightGrayText(text: "dinosuardasdasdasd")
+                LightGrayText(text: data.diaryText)
                 }
                 .padding()
                 .background(Color.lightGray)
-            .cornerRadius(20)
+                .cornerRadius(20)
     }
 }
 
 struct w_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            DiaryHScrollView()
+            DiaryHScrollView(diarySet: TestData.dummyDiary)
         }
     }
 }
