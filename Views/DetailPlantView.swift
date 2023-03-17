@@ -53,8 +53,8 @@ struct PlantProfileCardView: View {
                 
                 Spacer()
                 
-                Button {
-                    print("")
+                NavigationLink {
+                    PlantProfileEditView(viewModel: DateSelectViewModel(), data: data)
                 } label: {
                     Image(systemName: "pencil.circle")
                         .resizable()
@@ -70,7 +70,7 @@ struct PlantProfileCardView: View {
                     .frame(width: 180, height: 180)
                     .aspectRatio(contentMode: .fit)
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 10) {
                         BlackText(text: "Species")
                         BlackText(text: ":")
@@ -86,7 +86,13 @@ struct PlantProfileCardView: View {
                     VStack(alignment: .leading ,spacing: 10) {
                         BlackText(text: "Water Remind")
                         ForEach(data.wateringDay, id: \.self) { data in
-                            LightGrayText(text: data.toDay())
+                            HStack {
+                                Image(systemName: "circle.fill")
+                                    .resizable()
+                                    .frame(width: 10, height: 10, alignment: .center)
+                                    .foregroundColor(.mainGreen)
+                                Text("\(data.toDay())")
+                            }
                         }
                     }
                 }

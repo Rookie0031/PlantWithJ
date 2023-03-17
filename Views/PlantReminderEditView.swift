@@ -1,16 +1,17 @@
 //
-//  PlantWateringRemindHstack.swift
+//  PlantReminderEditView.swift
 //  PlantWithJ
 //
-//  Created by 장지수 on 2023/03/09.
+//  Created by 장지수 on 2023/03/17.
 //
+
 import SwiftUI
 
-struct PlantWateringRemindStack: View {
+struct PlantReminderEditView: View {
     
     @ObservedObject var viewModel: DateSelectViewModel
     @State var text: String = ""
-    let type: InformationType
+    let remindDay: [Date]
     let guideText: String
     
     var body: some View {
@@ -23,20 +24,20 @@ struct PlantWateringRemindStack: View {
                 NavigationLink {
                     DateSelectView(viewModel: viewModel)
                 } label: {
-                    Text("Set")
+                    Text("Edit")
                 }
             }
             .padding(.horizontal, 40)
             
-            ForEach(viewModel.selectedRemindTimes, id: \.id) { data in
+            ForEach(remindDay, id: \.self) { data in
                 HStack {
                     Image(systemName: "circle.fill")
                         .resizable()
                         .frame(width: 10, height: 10, alignment: .center)
                         .foregroundColor(.mainGreen)
-                    Text(data.day)
+                    Text(data.toDay())
                         .font(.basicText)
-                    Text(data.time.formatted(date: .omitted, time: .shortened))
+                    Text(data.formatted(date: .omitted, time: .shortened))
                         .font(.basicText)
                 }
                 .padding(.horizontal, 40)

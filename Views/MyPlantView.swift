@@ -58,13 +58,6 @@ struct MyPlantView: View {
     }
 }
 
-struct Item: Hashable {
-    let image: String
-    let title: String
-    let subtitle: String
-}
-
-
 struct MyPlantView_Preview: PreviewProvider {
     static var previews: some View {
         NavigationStack {
