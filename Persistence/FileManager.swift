@@ -15,7 +15,7 @@ final class Persistence {
                                     in: .userDomainMask,
                                     appropriateFor: nil,
                                     create: false)
-        .appendingPathComponent("restaurants.data")
+        .appendingPathComponent("Plants.data")
     }
 
     // persistence
@@ -30,9 +30,9 @@ final class Persistence {
                     }
                     return
                 }
-                let restaurantsData = try JSONDecoder().decode([PlantInformationModel].self, from: file.availableData)
+                let plantsData = try JSONDecoder().decode([PlantInformationModel].self, from: file.availableData)
                 DispatchQueue.main.async {
-                    completion(.success(restaurantsData))
+                    completion(.success(plantsData))
                 }
             } catch {
                 DispatchQueue.main.async {
@@ -46,12 +46,12 @@ final class Persistence {
         DispatchQueue.global(qos: .background).async {
             do {
                 print("최종 저장전 확인")
-                let restaurants = try JSONEncoder().encode(data)
+                let plantsData = try JSONEncoder().encode(data)
                 let outfile = try fileURL()
-                try restaurants.write(to: outfile)
+                try plantsData.write(to: outfile)
                 print("저장이 성공햇어요!")
                 DispatchQueue.main.async {
-                    completion(.success(restaurants.count))
+                    completion(.success(plantsData.count))
                 }
             } catch {
                 print("저장 실패")
