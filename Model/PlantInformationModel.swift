@@ -7,11 +7,12 @@
 
 import Foundation
 
-struct PlantInformationModel: Hashable, Identifiable {
-    let id: String = UUID().uuidString
+struct PlantInformationModel: Hashable, Identifiable, Codable {
+    var id: String = UUID().uuidString
     let imageData: Data
     let name: String
     let species: String
     let birthDay: Date
     let wateringDay: [Date]
+    let diary: [DiaryDataModel]
 }

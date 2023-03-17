@@ -1,14 +1,14 @@
 //
-//  NewPlantRegisterView.swift
+//  RegisterNewPlantView.swift
 //  PlantWithJ
 //
-//  Created by 장지수 on 2023/03/17.
+//  Created by 장지수 on 2023/03/07.
 //
 
 import SwiftUI
 import PhotosUI
 
-struct RegisterNewPlantView: View {
+struct RegisterFirstPlantView: View {
     @ObservedObject var viewModel: DateSelectViewModel
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
@@ -67,10 +67,10 @@ struct RegisterNewPlantView: View {
     }
 }
 
-struct RegisterNewPlantView_Preview: PreviewProvider {
+struct ContentView_Preview_Regiter: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            RegisterNewPlantView(viewModel: DateSelectViewModel())
+            RegisterFirstPlantView(viewModel: DateSelectViewModel())
         }
     }
 }

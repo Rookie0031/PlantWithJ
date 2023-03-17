@@ -55,6 +55,18 @@ struct MyPlantView: View {
             .padding()
         }
         .navigationTitle("Growing Plants")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink {
+                    Text("Edit")
+                } label: {
+                    Image(systemName: "plus.circle")
+                        .resizable()
+                        .frame(width: 20, height: 20, alignment: .center)
+                        .foregroundColor(.deepGreen)
+                }
+            }
+        }
     }
 }
 
