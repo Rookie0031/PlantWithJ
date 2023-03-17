@@ -18,7 +18,7 @@ struct PlantBirthDaySetHstackView: View {
                 .font(Font.basicText)
             Spacer()
             
-            DatePicker("Select a date", selection: $selectedDate, in: Date()..., displayedComponents: [.date])
+            DatePicker("Select a date", selection: $selectedDate, in: ...Date(), displayedComponents: [.date])
                 .datePickerStyle(.compact)
                 .labelsHidden()
         }

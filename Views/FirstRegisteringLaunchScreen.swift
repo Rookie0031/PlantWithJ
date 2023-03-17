@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FirstRegisteringLaunchScreen: View {
+    @StateObject private var data = PlantDataStorage()
     var body: some View {
         VStack {
             Spacer()
@@ -19,7 +20,13 @@ struct FirstRegisteringLaunchScreen: View {
             Spacer()
             
             NavigationLink {
-                MyPlantView()
+                MyPlantView(items: TestData.dummyPlants) {
+                    PlantDataStorage.saveLocalData(data: data.plantData) { result in
+                        if case .failure(let error) = result {
+                            fatalError(error.localizedDescription)
+                        }
+                    }
+                }
                     .navigationBarBackButtonHidden()
                     .navigationBarTitleDisplayMode(.large)
             } label: {

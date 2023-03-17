@@ -8,7 +8,8 @@
 import SwiftUI
 import Foundation
 
-final class Persistence {
+final class PlantDataStorage: ObservableObject {
+    @Published var plantData: [PlantInformationModel] = []
 
     private static func fileURL() throws -> URL {
         try FileManager.default.url(for: .documentDirectory,
@@ -17,8 +18,7 @@ final class Persistence {
                                     create: false)
         .appendingPathComponent("Plants.data")
     }
-
-    // persistence
+    
     static func loadLocalData(completion: @escaping (Result<[PlantInformationModel], Error>)->Void) {
         DispatchQueue.global(qos: .background).async {
             do {

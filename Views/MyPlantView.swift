@@ -8,16 +8,14 @@ import UIKit
 import SwiftUI
 
 struct MyPlantView: View {
-    let items = TestData.dummyPlants
+    @Environment(\.scenePhase) private var scenePhase
+    let items: [PlantInformationModel]
+    let saveAction: ()->Void
     
     let columns: [GridItem] = [
         GridItem(.adaptive(minimum: 150)),
         GridItem(.adaptive(minimum: 150))
     ]
-    
-    init() {
-        UINavigationBar.appearance().largeTitleTextAttributes = [.font : UIFont(name: "Georgia-Bold", size: 26)!]
-    }
     
     var body: some View {
         ScrollView {
@@ -54,6 +52,11 @@ struct MyPlantView: View {
             }
             .padding()
         }
+        .onAppear(perform: {
+            if !UserDefaults().bool(forKey: "launchedBefore") {
+                UserDefaults.standard.set(true, forKey: "launchedBefore")
+            }
+        })
         .navigationTitle("Growing Plants")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -67,13 +70,22 @@ struct MyPlantView: View {
                 }
             }
         }
+        .onChange(of: scenePhase) { phase in
+            if phase == .inactive { saveAction() }
+        }
     }
 }
 
 struct MyPlantView_Preview: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            MyPlantView()
+            MyPlantView(items: TestData.dummyPlants) {
+                PlantDataStorage.saveLocalData(data: TestData.dummyPlants) { result in
+                    if case .failure(let error) = result {
+                        fatalError(error.localizedDescription)
+                    }
+                }
+            }
         }
     }
 }

@@ -15,7 +15,26 @@ struct TestData {
             name: "Dino",
             species: "Happy tree set",
             birthDay: Date(),
-            wateringDay: [Date(), Date(), Date()]),
+            wateringDay: [Date(), Date(), Date()],
+            diary: [
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! My Plant is now growing twice "),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !!, this is quite awesome day "),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! I really lookforward to this !! Please gogo"),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! ")
+            ]
+        ),
         
         PlantInformationModel(
             imageData: UIImage(named: "TestPlantImage")?
@@ -23,7 +42,25 @@ struct TestData {
             name: "ReGo",
             species: "SpartFilm",
             birthDay: Date(),
-            wateringDay: [Date(), Date(), Date()]),
+            wateringDay: [Date(), Date(), Date()],
+            diary: [
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! "),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! "),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! "),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! ")
+            ]),
         
         PlantInformationModel(
             imageData: UIImage(named: "TestPlantImage")?
@@ -31,7 +68,25 @@ struct TestData {
             name: "MiMiNoRiki",
             species: "Unknown",
             birthDay: Date(),
-            wateringDay: [Date()]),
+            wateringDay: [Date()],
+            diary: [
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! "),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! "),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! "),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! ")
+            ]),
         
         PlantInformationModel(
             imageData: UIImage(named: "TestPlantImage")?
@@ -39,7 +94,25 @@ struct TestData {
             name: "Albes",
             species: "Allowari",
             birthDay: Date(),
-            wateringDay: [Date(), Date(), Date()]),
+            wateringDay: [Date(), Date(), Date()],
+            diary: [
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! "),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! "),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! "),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! ")
+            ]),
         
         PlantInformationModel(
             imageData: UIImage(named: "TestPlantImage")?
@@ -47,7 +120,25 @@ struct TestData {
             name: "Races",
             species: "Happy tree set",
             birthDay: Date(),
-            wateringDay: [Date()])
+            wateringDay: [Date()],
+            diary: [
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! "),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! "),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! "),
+                DiaryDataModel(date: Date(),
+                               image: UIImage(named: "TestPlantImage")?
+                    .jpegData(compressionQuality: 0.2) ?? Data(),
+                               diaryText: "Today i did some research about something. We foudn that this is so awesome !! ")
+            ])
     ]
     
     static var dummyDiary: [DiaryDataModel] = [

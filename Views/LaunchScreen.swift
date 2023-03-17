@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LaunchScreen: View {
     @StateObject var dateViewModel: DateSelectViewModel = DateSelectViewModel()
+    
     var body: some View {
         NavigationStack {
             VStack {
