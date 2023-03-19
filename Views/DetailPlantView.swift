@@ -22,7 +22,7 @@ struct DetailPlantView: View {
                         Spacer()
                         
                         NavigationLink {
-                            DiaryWritingView()
+                            DiaryWritingView(id: plantData.id)
                         } label: {
                             Image(systemName: "plus.circle")
                                 .resizable()
@@ -33,7 +33,7 @@ struct DetailPlantView: View {
                     }
                     .padding(.horizontal, 30)
                     
-                    DiaryHScrollView(diarySet: TestData.dummyDiary)
+                    DiaryHScrollView(diarySet: plantData.diary)
                         .padding(.leading, 30)
                 }
             }

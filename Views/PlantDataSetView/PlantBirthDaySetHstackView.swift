@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlantBirthDaySetHstackView: View {
-    @State private var selectedDate = Date()
+    @Binding var selectedDate: Date
     let guideText: String
     
     @State var text: String = ""

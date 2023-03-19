@@ -29,6 +29,7 @@ struct MyPlantView: View {
                         VStack(alignment: .center, spacing: 8) {
                             Image(uiImage: UIImage(data: item.imageData) ?? UIImage())
                                 .resizable()
+                                .frame(height: 200)
                                 .aspectRatio(contentMode: .fit)
                                 .cornerRadius(10)
                             
@@ -61,7 +62,7 @@ struct MyPlantView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink {
-                    Text("Edit")
+                    RegisterNewPlantView(viewModel: DateSelectViewModel())
                 } label: {
                     Image(systemName: "plus.circle")
                         .resizable()

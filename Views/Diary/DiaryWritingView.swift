@@ -8,11 +8,15 @@ import PhotosUI
 import SwiftUI
 
 struct DiaryWritingView: View {
+    @EnvironmentObject var storage: PlantDataStorage
+    @Environment(\.presentationMode) var presentationMode
     @State private var selectedDate = Date()
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
-    
     @State private var text: String = ""
+    
+    let id: String
+    
     var body: some View {
         VStack(spacing: 40) {
             PhotosPicker(
@@ -88,19 +92,31 @@ struct DiaryWritingView: View {
             
             Spacer()
             
-            BottomButton(title: "Save") {
-                print("dasd")
+            if text.isEmpty || selectedImageData == nil {
+                BottomButtonInActive(title: "Save")
+            } else {
+                BottomButton(title: "Save") {
+//                    saveNewPlantData()
+                    presentationMode.wrappedValue.dismiss()
+                }
             }
         }
         .navigationTitle("New Diary")
         .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    private func saveNewPlantData() {
+        let newPlantData: DiaryDataModel = DiaryDataModel(
+            date: selectedDate, image: selectedImageData ?? Data(), diaryText: text)
+//        let plantDataIndex = storage.plantData.firstIndex { $0.id == self.id }
+//        storage.plantData[plantDataIndex].diary.append(newPlantData)
     }
 }
 
 struct DiaryWritingView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            DiaryWritingView()
+            DiaryWritingView(id: "dasd")
         }
     }
 }

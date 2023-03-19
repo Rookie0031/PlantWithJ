@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct FirstRegisteringLaunchScreen: View {
-    @StateObject private var data = PlantDataStorage()
+struct FirstLaunchWelcomeView: View {
+    @EnvironmentObject var data: PlantDataStorage
     var body: some View {
         VStack {
             Spacer()
@@ -20,7 +20,7 @@ struct FirstRegisteringLaunchScreen: View {
             Spacer()
             
             NavigationLink {
-                MyPlantView(items: TestData.dummyPlants) {
+                MyPlantView(items: data.plantData) {
                     PlantDataStorage.saveLocalData(data: data.plantData) { result in
                         if case .failure(let error) = result {
                             fatalError(error.localizedDescription)
@@ -39,7 +39,8 @@ struct FirstRegisteringLaunchScreen: View {
 struct FirstRegisteringLaunchScreen_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            FirstRegisteringLaunchScreen()
+            FirstLaunchWelcomeView()
+                .environmentObject(PlantDataStorage())
         }
     }
 }

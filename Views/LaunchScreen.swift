@@ -28,7 +28,7 @@ struct LaunchScreen: View {
                 Spacer()
                 
                 NavigationLink(destination:
-                                RegisterFirstPlantView(viewModel: dateViewModel).navigationBarBackButtonHidden()) {
+                                FirstRegisterPlantView(viewModel: dateViewModel).navigationBarBackButtonHidden()) {
                     Text("Start with your plant")
                         .frame(width: 300, height: 60, alignment: .center)
                         .font(Font.buttonContent.bold())

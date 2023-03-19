@@ -9,9 +9,15 @@ import SwiftUI
 import PhotosUI
 
 struct RegisterNewPlantView: View {
+    @EnvironmentObject var storage: PlantDataStorage
+    @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: DateSelectViewModel
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
+    
+    @State private var name: String = ""
+    @State private var species: String = ""
+    @State private var birthday: Date = Date()
     
     var body: some View {
         
@@ -44,26 +50,40 @@ struct RegisterNewPlantView: View {
             .padding() //photo picker ends
             
             
-            PlantInfoSetHStackView(type: .textInfo, guideText: "Name", placeholer: "Name of plant")
+            PlantInfoSetHStackView(text: $name, type: .textInfo, guideText: "Name", placeholer: "Name of plant")
             
-            PlantInfoSetHStackView(type: .textInfo, guideText: "Species", placeholer: "Species of plant")
+            PlantInfoSetHStackView(text: $species, type: .textInfo, guideText: "Species", placeholer: "Species of plant")
             
-            PlantBirthDaySetHstackView(guideText: "Birthday")
+            PlantBirthDaySetHstackView(selectedDate: $birthday, guideText: "Birthday")
             
             PlantWateringRemindStack(viewModel: viewModel, type: .reminder, guideText: "Water Remind")
             
             Spacer()
             
-            NavigationLink {
-                FirstRegisteringLaunchScreen()
-                    .navigationBarBackButtonHidden()
-            } label: {
-                BottomButtonUI(title: "Next")
+            if name.isEmpty || species.isEmpty || selectedImageData == nil {
+                BottomButtonInActive(title: "Next")
+            } else {
+                BottomButton(title: "Next") {
+                    saveNewPlantData()
+                    presentationMode.wrappedValue.dismiss()
+                }
             }
 
         }
         .navigationTitle("New Plant")
         .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    private func saveNewPlantData() {
+        let newPlantData: PlantInformationModel = PlantInformationModel(
+            imageData: selectedImageData ?? Data(),
+            name: name,
+            species: species,
+            birthDay: birthday,
+            wateringDay: viewModel.selectedRemindTimes.map({ $0.time }),
+            diary: [])
+        
+        if !storage.plantData.contains(where: { $0.id == newPlantData.id }) { storage.plantData.append(newPlantData) }
     }
 }
 

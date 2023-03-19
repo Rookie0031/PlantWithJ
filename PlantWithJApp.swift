@@ -9,20 +9,21 @@ import SwiftUI
 
 @main
 struct PlantWithJApp: App {
-    @StateObject private var data = PlantDataStorage()
+    @StateObject private var dataStorage = PlantDataStorage()
     let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
     
     var body: some Scene {
         WindowGroup {
             if launchedBefore {
                 NavigationStack {
-                    MyPlantView(items: TestData.dummyPlants) {
-                        PlantDataStorage.saveLocalData(data: data.plantData) { result in
+                    MyPlantView(items: dataStorage.plantData) {
+                        PlantDataStorage.saveLocalData(data: dataStorage.plantData) { result in
                             if case .failure(let error) = result {
                                 fatalError(error.localizedDescription)
                             }
                         }
                     }
+                    .environmentObject(dataStorage)
                 }
                 .onAppear {
                     PlantDataStorage.loadLocalData { result in
@@ -30,12 +31,13 @@ struct PlantWithJApp: App {
                         case .failure(let error):
                             fatalError(error.localizedDescription)
                         case .success(let plantData):
-                            data.plantData = plantData
+                            dataStorage.plantData = plantData
                         }
                     }
                 }
             } else {
                 LaunchScreen()
+                    .environmentObject(dataStorage)
             }
         }
     }

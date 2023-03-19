@@ -15,6 +15,11 @@ struct PlantProfileEditView: View {
     @ObservedObject var viewModel: DateSelectViewModel
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
+    
+    @State private var name: String = ""
+    @State private var species: String = ""
+    @State private var birthday: Date = Date()
+    
     let data: PlantInformationModel
     
     var body: some View {
@@ -48,9 +53,9 @@ struct PlantProfileEditView: View {
             .padding() //photo picker ends
             
             
-            PlantInfoSetHStackView(type: .textInfo, guideText: "Name", placeholer: data.name)
+            PlantInfoSetHStackView(text: $name, type: .textInfo, guideText: "Name", placeholer: data.name)
             
-            PlantInfoSetHStackView(type: .textInfo, guideText: "Species", placeholer: data.species)
+            PlantInfoSetHStackView(text: $species, type: .textInfo, guideText: "Species", placeholer: data.species)
             
             PlantBirthDayEditView(selectedDate: data.birthDay, guideText: "Birthday")
             

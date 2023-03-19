@@ -17,7 +17,7 @@ enum InformationType {
 
 struct PlantInfoSetHStackView: View {
     
-    @State var text: String = ""
+    @Binding var text: String
     let type: InformationType
     let guideText: String
     let placeholer: String
@@ -45,8 +45,8 @@ struct PlantInfoSetHStackView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             VStack {
-                PlantInfoSetHStackView(type: .reminder, guideText: "dasdas", placeholer: "dasdasdadasdads")
-                PlantBirthDaySetHstackView(guideText: "dasdas")
+                PlantInfoSetHStackView(text: .constant("dasd"), type: .reminder, guideText: "dasdas", placeholer: "dasdasdadasdads")
+                PlantBirthDaySetHstackView(selectedDate: .constant(Date()), guideText: "dasdas")
             }
         }
     }
