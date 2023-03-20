@@ -108,8 +108,9 @@ struct DiaryWritingView: View {
     private func saveNewPlantData() {
         let newPlantData: DiaryDataModel = DiaryDataModel(
             date: selectedDate, image: selectedImageData ?? Data(), diaryText: text)
-//        let plantDataIndex = storage.plantData.firstIndex { $0.id == self.id }
-//        storage.plantData[plantDataIndex].diary.append(newPlantData)
+        if let plantDataIndex = storage.plantData.firstIndex(where: { $0.id == self.id }) {
+            storage.plantData[plantDataIndex].diary.append(newPlantData)
+        }
     }
 }
 
