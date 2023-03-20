@@ -25,8 +25,7 @@ struct DetailPlantView: View {
                         Spacer()
                         
                         NavigationLink {
-                            DiaryWritingView(id: viewModel.plantData.first(where: {
-                                $0.id == plantData.id })!.id)
+                            DiaryWritingView(id: plantData.id)
                         } label: {
                             Image(systemName: "plus.circle")
                                 .resizable()
