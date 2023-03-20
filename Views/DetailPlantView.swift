@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct DetailPlantView: View {
+    @EnvironmentObject var viewModel: PlantDataStorage
     let plantData: PlantInformationModel
     var body: some View {
         ScrollView(.vertical) {
             LazyVStack(alignment: .leading,spacing: 30) {
-                PlantProfileCardView(data: plantData)
+                PlantProfileCardView(data: viewModel.plantData.first(where: {
+                    $0.id == plantData.id
+                }) ?? PlantInformationModel(imageData: Data(), name: "error", species: "", birthDay: Date(), wateringDay: [], diary: []))
                 
                 VStack {
                     HStack {
@@ -22,7 +25,8 @@ struct DetailPlantView: View {
                         Spacer()
                         
                         NavigationLink {
-                            DiaryWritingView(id: plantData.id)
+                            DiaryWritingView(id: viewModel.plantData.first(where: {
+                                $0.id == plantData.id })!.id)
                         } label: {
                             Image(systemName: "plus.circle")
                                 .resizable()
@@ -33,7 +37,7 @@ struct DetailPlantView: View {
                     }
                     .padding(.horizontal, 30)
                     
-                    DiaryHScrollView(diarySet: plantData.diary)
+                    DiaryHScrollView(viewModel: viewModel, plantid: plantData.id)
                         .padding(.leading, 30)
                 }
             }

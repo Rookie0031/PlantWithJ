@@ -96,7 +96,7 @@ struct DiaryWritingView: View {
                 BottomButtonInActive(title: "Save")
             } else {
                 BottomButton(title: "Save") {
-//                    saveNewPlantData()
+                    saveNewPlantData()
                     presentationMode.wrappedValue.dismiss()
                 }
             }

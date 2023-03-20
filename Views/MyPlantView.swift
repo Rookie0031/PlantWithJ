@@ -8,6 +8,7 @@ import UIKit
 import SwiftUI
 
 struct MyPlantView: View {
+    @EnvironmentObject var storage: PlantDataStorage
     @Environment(\.scenePhase) private var scenePhase
     let items: [PlantInformationModel]
     let saveAction: ()->Void
@@ -23,6 +24,7 @@ struct MyPlantView: View {
                 ForEach(items, id: \.id) { item in
                     NavigationLink {
                         DetailPlantView(plantData: item)
+                            .environmentObject(storage)
                             .navigationTitle("Plant Profile")
                             .navigationBarTitleDisplayMode(.inline)
                     } label: {

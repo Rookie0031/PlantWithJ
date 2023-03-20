@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct DiaryHScrollView: View {
-    let diarySet: [DiaryDataModel]
+    @ObservedObject var viewModel: PlantDataStorage
+    let plantid: String
     var body: some View {
             
         ScrollView(.horizontal) {
             LazyHStack(spacing: 20) {
-                ForEach(diarySet) { diary in
+                ForEach(viewModel.plantData.first(where: { $0.id == plantid
+                })!.diary) { diary in
                     PlantDiaryCardView(data: diary)
                 }
             }
@@ -40,13 +42,5 @@ struct PlantDiaryCardView: View {
                 .padding()
                 .background(Color.lightGray)
                 .cornerRadius(20)
-    }
-}
-
-struct w_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            DiaryHScrollView(diarySet: TestData.dummyDiary)
-        }
     }
 }
