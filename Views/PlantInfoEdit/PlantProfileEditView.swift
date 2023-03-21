@@ -12,10 +12,11 @@ import PhotosUI
 
 struct PlantProfileEditView: View {
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var viewModel: DateSelectViewModel
+    @ObservedObject var storage: PlantDataStorage
+    @StateObject var viewModel: DateSelectViewModel = DateSelectViewModel()
+    
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
-    
     @State private var name: String = ""
     @State private var species: String = ""
     @State private var birthday: Date = Date()
@@ -49,8 +50,8 @@ struct PlantProfileEditView: View {
                             selectedImageData = data
                         }
                     }
-            }
-            .padding() //photo picker ends
+                }
+                .padding() //photo picker ends
             
             
             PlantInfoSetHStackView(text: $name, type: .textInfo, guideText: "Name", placeholer: data.name)
@@ -64,20 +65,32 @@ struct PlantProfileEditView: View {
             Spacer()
             
             BottomButton(title: "Save") {
-                //TODO: Needs action
+                saveEditedInformation()
                 self.presentationMode.wrappedValue.dismiss()
             }
-
+            
         }
         .navigationTitle("Edit profile")
         .navigationBarTitleDisplayMode(.inline)
     }
-}
-
-struct PlantProfileEditView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            PlantProfileEditView(viewModel: DateSelectViewModel(), data: TestData.dummyPlants.first!)
+    
+    private func saveEditedInformation() {
+        let originalPlantDataIndex = storage.plantData.firstIndex { $0.id == data.id }!
+        
+        if !self.name.isEmpty {
+            storage.plantData[originalPlantDataIndex].name = self.name
+        }
+        
+        if !self.species.isEmpty {
+            storage.plantData[originalPlantDataIndex].species = self.species
+        }
+        
+        if storage.plantData[originalPlantDataIndex].birthDay != data.birthDay {
+            storage.plantData[originalPlantDataIndex].birthDay = self.birthday
+        }
+        
+        if self.selectedImageData != nil {
+            storage.plantData[originalPlantDataIndex].imageData = self.selectedImageData ?? Data()
         }
     }
 }

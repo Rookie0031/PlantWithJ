@@ -1,13 +1,13 @@
 //
-//  DateSelectViewModel.swift
+//  EditDateSelectViewModel.swift
 //  PlantWithJ
 //
-//  Created by 장지수 on 2023/03/09.
+//  Created by 장지수 on 2023/03/22.
 //
 
 import Foundation
 
-final class DateSelectViewModel: ObservableObject {
+final class EditDateSelectViewModel: ObservableObject {
     @Published var selectedRemindTimes: [ReminderTimeModel] = []
     @Published var remindTimes: [ReminderTimeModel] = [
         ReminderTimeModel(day: "Mon", time: Date()),

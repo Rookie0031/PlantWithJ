@@ -8,7 +8,7 @@
 import Foundation
 
 extension Date {
-    func toDay() -> String {
+    func weekday() -> String {
         let calendar = Calendar.current
         let day = calendar.component(.weekday, from: self)  // extract the day component
         switch day {
@@ -23,10 +23,35 @@ extension Date {
         }
     }
     
-    func toHourAndMinute() -> String {
+    func hourAndminute() -> String {
         let calendar = Calendar.current
         let hour = String(calendar.component(.hour, from: self))  // extract the hour component
         let minute = String(calendar.component(.minute, from: self))
         return hour+":"+minute
+    }
+    
+    func year() -> Int {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year], from: self)
+        return components.year ?? 0
+    }
+    
+    func month() -> Int {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.month], from: self)
+        return components.month ?? 0
+    }
+    
+    func day() -> Int {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.day], from: self)
+        return components.day ?? 0
+    }
+    
+    func toBirthDayString() -> String {
+        let month = String(self.month())
+        let day = String(self.day())
+        let year = String(self.year())
+        return month+"/"+day+"/"+year
     }
 }

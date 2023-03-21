@@ -32,6 +32,7 @@ struct PlantInfoSetHStackView: View {
                 TextField(placeholer, text: $text)
                     .frame(width: 200, height: 30, alignment: .center)
                     .padding(5)
+                    .foregroundColor(.black)
                     .font(.basicText.italic())
                     .background(Color.lightGray)
                     .cornerRadius(10)

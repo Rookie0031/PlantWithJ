@@ -9,7 +9,7 @@ import SwiftUI
 import PhotosUI
 
 struct RegisterNewPlantView: View {
-    @EnvironmentObject var storage: PlantDataStorage
+    @ObservedObject var storage: PlantDataStorage
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: DateSelectViewModel
     @State private var selectedItem: PhotosPickerItem? = nil
@@ -61,9 +61,9 @@ struct RegisterNewPlantView: View {
             Spacer()
             
             if name.isEmpty || species.isEmpty || selectedImageData == nil {
-                BottomButtonInActive(title: "Next")
+                BottomButtonInActive(title: "Save")
             } else {
-                BottomButton(title: "Next") {
+                BottomButton(title: "Save") {
                     saveNewPlantData()
                     presentationMode.wrappedValue.dismiss()
                 }
@@ -84,13 +84,5 @@ struct RegisterNewPlantView: View {
             diary: [])
         
         if !storage.plantData.contains(where: { $0.id == newPlantData.id }) { storage.plantData.append(newPlantData) }
-    }
-}
-
-struct RegisterNewPlantView_Preview: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            RegisterNewPlantView(viewModel: DateSelectViewModel())
-        }
     }
 }

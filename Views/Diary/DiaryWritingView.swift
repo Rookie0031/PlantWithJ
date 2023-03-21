@@ -8,7 +8,7 @@ import PhotosUI
 import SwiftUI
 
 struct DiaryWritingView: View {
-    @EnvironmentObject var storage: PlantDataStorage
+    @ObservedObject var storage: PlantDataStorage
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedDate = Date()
     @State private var selectedItem: PhotosPickerItem? = nil
@@ -110,14 +110,6 @@ struct DiaryWritingView: View {
             date: selectedDate, image: selectedImageData ?? Data(), diaryText: text)
         if let plantDataIndex = storage.plantData.firstIndex(where: { $0.id == self.id }) {
             storage.plantData[plantDataIndex].diary.append(newPlantData)
-        }
-    }
-}
-
-struct DiaryWritingView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            DiaryWritingView(id: "dasd")
         }
     }
 }

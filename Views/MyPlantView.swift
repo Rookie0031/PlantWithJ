@@ -64,7 +64,7 @@ struct MyPlantView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink {
-                    RegisterNewPlantView(viewModel: DateSelectViewModel())
+                    RegisterNewPlantView(storage: storage, viewModel: DateSelectViewModel())
                 } label: {
                     Image(systemName: "plus.circle")
                         .resizable()

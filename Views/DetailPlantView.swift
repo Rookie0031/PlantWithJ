@@ -13,7 +13,7 @@ struct DetailPlantView: View {
     var body: some View {
         ScrollView(.vertical) {
             LazyVStack(alignment: .leading,spacing: 30) {
-                PlantProfileCardView(data: viewModel.plantData.first(where: {
+                PlantProfileCardView(storage: viewModel, data: viewModel.plantData.first(where: {
                     $0.id == plantData.id
                 }) ?? PlantInformationModel(imageData: Data(), name: "error", species: "", birthDay: Date(), wateringDay: [], diary: []))
                 
@@ -25,7 +25,7 @@ struct DetailPlantView: View {
                         Spacer()
                         
                         NavigationLink {
-                            DiaryWritingView(id: plantData.id)
+                            DiaryWritingView(storage: viewModel, id: plantData.id)
                         } label: {
                             Image(systemName: "plus.circle")
                                 .resizable()
@@ -46,6 +46,7 @@ struct DetailPlantView: View {
 }
 
 struct PlantProfileCardView: View {
+    @ObservedObject var storage: PlantDataStorage
     let data: PlantInformationModel
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -57,7 +58,7 @@ struct PlantProfileCardView: View {
                 Spacer()
                 
                 NavigationLink {
-                    PlantProfileEditView(viewModel: DateSelectViewModel(), data: data)
+                    PlantProfileEditView(storage: storage, viewModel: DateSelectViewModel(), data: data)
                 } label: {
                     Image(systemName: "pencil.circle")
                         .resizable()
@@ -83,7 +84,7 @@ struct PlantProfileCardView: View {
                     HStack(spacing: 10) {
                         BlackText(text: "Birthday")
                         BlackText(text: ":")
-                        LightGrayText(text: "\(data.birthDay)")
+                        LightGrayText(text: data.birthDay.toBirthDayString())
                     }
                     
                     VStack(alignment: .leading ,spacing: 10) {
@@ -94,7 +95,10 @@ struct PlantProfileCardView: View {
                                     .resizable()
                                     .frame(width: 10, height: 10, alignment: .center)
                                     .foregroundColor(.mainGreen)
-                                Text("\(data.toDay())")
+                                Text(data.weekday())
+                                    .font(.basicText)
+                                Text(data.formatted(date: .omitted, time: .shortened))
+                                    .font(.basicText)
                             }
                         }
                     }
