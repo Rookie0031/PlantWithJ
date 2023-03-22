@@ -15,6 +15,7 @@ struct PlantProfileEditView: View {
     @ObservedObject var storage: PlantDataStorage
     @StateObject var viewModel: DateSelectViewModel = DateSelectViewModel()
     
+    @State private var isReminderEdited: Bool = false
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
     @State private var name: String = ""
@@ -60,7 +61,7 @@ struct PlantProfileEditView: View {
             
             PlantBirthDayEditView(selectedDate: data.birthDay, guideText: "Birthday")
             
-            PlantReminderEditView(viewModel: viewModel, remindDay: data.wateringDay, guideText: "Water Remind")
+            PlantReminderEditView(viewModel: viewModel, isEdited: $isReminderEdited, remindDay: data.wateringDay, guideText: "Water Remind")
             
             Spacer()
             
@@ -91,6 +92,10 @@ struct PlantProfileEditView: View {
         
         if self.selectedImageData != nil {
             storage.plantData[originalPlantDataIndex].imageData = self.selectedImageData ?? Data()
+        }
+        
+        if self.isReminderEdited && self.viewModel.selectedRemindTimes.map({ $0.time }) != data.wateringDay {
+            storage.plantData[originalPlantDataIndex].wateringDay = self.viewModel.selectedRemindTimes.map({ $0.time })
         }
     }
 }

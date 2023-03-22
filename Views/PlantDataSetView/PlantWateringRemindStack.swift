@@ -9,6 +9,7 @@ import SwiftUI
 struct PlantWateringRemindStack: View {
     
     @ObservedObject var viewModel: DateSelectViewModel
+    @State private var dummyBool: Bool = false
     @State var text: String = ""
     let type: InformationType
     let guideText: String
@@ -21,7 +22,7 @@ struct PlantWateringRemindStack: View {
                 Spacer()
                 
                 NavigationLink {
-                    DateSelectView(viewModel: viewModel)
+                    WateringDaySelectView(viewModel: viewModel, isEdited: $dummyBool)
                 } label: {
                     Text("Set")
                 }

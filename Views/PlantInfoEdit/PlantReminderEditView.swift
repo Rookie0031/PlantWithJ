@@ -11,6 +11,7 @@ struct PlantReminderEditView: View {
     
     @ObservedObject var viewModel: DateSelectViewModel
     @State var text: String = ""
+    @Binding var isEdited: Bool
     let remindDay: [Date]
     let guideText: String
     
@@ -22,25 +23,42 @@ struct PlantReminderEditView: View {
                 Spacer()
                 
                 NavigationLink {
-                    DateSelectView(viewModel: viewModel)
+                    WateringDaySelectView(viewModel: viewModel, isEdited: $isEdited)
                 } label: {
                     Text("Edit")
                 }
             }
             .padding(.horizontal, 40)
             
-            ForEach(remindDay, id: \.self) { data in
-                HStack {
-                    Image(systemName: "circle.fill")
-                        .resizable()
-                        .frame(width: 10, height: 10, alignment: .center)
-                        .foregroundColor(.mainGreen)
-                    Text(data.weekday())
-                        .font(.basicText)
-                    Text(data.formatted(date: .omitted, time: .shortened))
-                        .font(.basicText)
+            // 편집되었고, 주입된 리마인더 정보와 바뀐 정보가 다를 경우
+            if isEdited && remindDay != viewModel.selectedRemindTimes.map({ $0.time}) {
+                ForEach(viewModel.selectedRemindTimes, id: \.id) { data in
+                    HStack {
+                        Image(systemName: "circle.fill")
+                            .resizable()
+                            .frame(width: 10, height: 10, alignment: .center)
+                            .foregroundColor(.mainGreen)
+                        Text(data.day)
+                            .font(.basicText)
+                        Text(data.time.formatted(date: .omitted, time: .shortened))
+                            .font(.basicText)
+                    }
+                    .padding(.horizontal, 40)
                 }
-                .padding(.horizontal, 40)
+            } else {
+                ForEach(remindDay, id: \.self) { data in
+                    HStack {
+                        Image(systemName: "circle.fill")
+                            .resizable()
+                            .frame(width: 10, height: 10, alignment: .center)
+                            .foregroundColor(.mainGreen)
+                        Text(data.weekday())
+                            .font(.basicText)
+                        Text(data.formatted(date: .omitted, time: .shortened))
+                            .font(.basicText)
+                    }
+                    .padding(.horizontal, 40)
+                }
             }
         }
     }

@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-struct DateSelectView: View {
+struct WateringDaySelectView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: DateSelectViewModel
+    @Binding var isEdited: Bool
     private let weekDays: [String] = ["Monday", "Tuesday", "Wednesday", "Thurday", "Friday", "Saturday", "Sunday"]
     
     var body: some View {
@@ -33,6 +34,7 @@ struct DateSelectView: View {
             
             BottomButton(title: "Complete") {
                 viewModel.selectedRemindTimes = viewModel.remindTimes.filter { $0.isSelected }
+                isEdited = true
                 presentationMode.wrappedValue.dismiss()
             }
         }
@@ -72,13 +74,5 @@ struct WeekdayHstack: View {
             }
         }
         .padding(.horizontal, 20)
-    }
-}
-
-struct DateSelectView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            DateSelectView(viewModel: DateSelectViewModel())
-        }
     }
 }
