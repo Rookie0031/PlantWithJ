@@ -13,7 +13,7 @@ import PhotosUI
 struct PlantProfileEditView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var storage: PlantDataStorage
-    @StateObject var viewModel: DateSelectViewModel = DateSelectViewModel()
+    @ObservedObject var viewModel: EditDateSelectViewModel
     
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil

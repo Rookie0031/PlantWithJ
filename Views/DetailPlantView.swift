@@ -58,7 +58,7 @@ struct PlantProfileCardView: View {
                 Spacer()
                 
                 NavigationLink {
-                    PlantProfileEditView(storage: storage, viewModel: DateSelectViewModel(), data: data)
+                    PlantProfileEditView(storage: storage, viewModel: EditDateSelectViewModel(), data: data)
                 } label: {
                     Image(systemName: "pencil.circle")
                         .resizable()

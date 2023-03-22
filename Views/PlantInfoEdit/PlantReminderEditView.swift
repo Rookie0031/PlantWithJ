@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PlantReminderEditView: View {
     
-    @ObservedObject var viewModel: DateSelectViewModel
+    @ObservedObject var viewModel: EditDateSelectViewModel
     @State var text: String = ""
     let remindDay: [Date]
     let guideText: String
@@ -22,7 +22,7 @@ struct PlantReminderEditView: View {
                 Spacer()
                 
                 NavigationLink {
-                    DateSelectView(viewModel: viewModel)
+                    EditDateSelectView(viewModel: viewModel)
                 } label: {
                     Text("Edit")
                 }
