@@ -52,7 +52,7 @@ struct PlantReminderEditView: View {
                             .resizable()
                             .frame(width: 10, height: 10, alignment: .center)
                             .foregroundColor(.mainGreen)
-                        Text(data.weekday())
+                        Text(data.weekdayText())
                             .font(.basicText)
                         Text(data.formatted(date: .omitted, time: .shortened))
                             .font(.basicText)

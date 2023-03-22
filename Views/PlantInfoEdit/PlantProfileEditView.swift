@@ -94,8 +94,8 @@ struct PlantProfileEditView: View {
             storage.plantData[originalPlantDataIndex].imageData = self.selectedImageData ?? Data()
         }
         
-        if self.isReminderEdited && self.viewModel.selectedRemindTimes.map({ $0.time }) != data.wateringDay {
-            storage.plantData[originalPlantDataIndex].wateringDay = self.viewModel.selectedRemindTimes.map({ $0.time })
+        if self.isReminderEdited {
+            storage.plantData[originalPlantDataIndex].wateringDay = self.viewModel.selectedRemindTimes.compactMap({ $0.time.remindDateForm(weekday: $0.day.toWeekDayComponent(), hourAndMinute: $0.time.hourAndminute()) })
         }
     }
 }

@@ -28,7 +28,7 @@ struct PlantDiaryCardView: View {
     var body: some View {
             VStack(alignment: .center, spacing: 10) {
                     
-                Text(data.date.hourAndminute())
+                Text(data.date.hourAndminuteText())
                         .font(.titleText)
                         .foregroundColor(.deepGreen)
                     

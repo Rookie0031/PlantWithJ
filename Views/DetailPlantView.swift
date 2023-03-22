@@ -84,18 +84,18 @@ struct PlantProfileCardView: View {
                     HStack(spacing: 10) {
                         BlackText(text: "Birthday")
                         BlackText(text: ":")
-                        LightGrayText(text: data.birthDay.toBirthDayString())
+                        LightGrayText(text: data.birthDay.toBirthDayStringText())
                     }
                     
                     VStack(alignment: .leading ,spacing: 10) {
                         BlackText(text: "Water Remind")
-                        ForEach(data.wateringDay, id: \.self) { data in
+                        ForEach(storage.plantData.first(where: { $0.id == data.id })!.wateringDay, id: \.self) { data in
                             HStack {
                                 Image(systemName: "circle.fill")
                                     .resizable()
                                     .frame(width: 10, height: 10, alignment: .center)
                                     .foregroundColor(.mainGreen)
-                                Text(data.weekday())
+                                Text(data.weekdayText())
                                     .font(.basicText)
                                 Text(data.formatted(date: .omitted, time: .shortened))
                                     .font(.basicText)
