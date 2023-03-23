@@ -80,7 +80,8 @@ struct RegisterNewPlantView: View {
             name: name,
             species: species,
             birthDay: birthday,
-            wateringDay: viewModel.selectedRemindTimes.map({ $0.time }),
+            wateringDay: viewModel.selectedRemindTimes
+                .map({ WateringDay(dayText: $0.day, dateInfo: $0.time) }),
             diary: [])
         
         if !storage.plantData.contains(where: { $0.id == newPlantData.id }) { storage.plantData.append(newPlantData) }

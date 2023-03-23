@@ -95,9 +95,9 @@ struct PlantProfileCardView: View {
                                     .resizable()
                                     .frame(width: 10, height: 10, alignment: .center)
                                     .foregroundColor(.mainGreen)
-                                Text(data.weekdayText())
+                                Text(data.dayText)
                                     .font(.basicText)
-                                Text(data.formatted(date: .omitted, time: .shortened))
+                                Text(data.dateInfo.formatted(date: .omitted, time: .shortened))
                                     .font(.basicText)
                             }
                         }

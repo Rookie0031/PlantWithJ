@@ -15,7 +15,7 @@ struct TestData {
             name: "Dino",
             species: "Happy tree set",
             birthDay: Date(),
-            wateringDay: [Date(), Date(), Date()],
+            wateringDay: [WateringDay(dayText: "Sat", dateInfo: Date())],
             diary: [
                 DiaryDataModel(date: Date(),
                                image: UIImage(named: "TestPlantImage")?
@@ -42,7 +42,8 @@ struct TestData {
             name: "ReGo",
             species: "SpartFilm",
             birthDay: Date(),
-            wateringDay: [Date(), Date(), Date()],
+            wateringDay: [WateringDay(dayText: "Sat", dateInfo: Date()),
+                          WateringDay(dayText: "Sat", dateInfo: Date())],
             diary: [
                 DiaryDataModel(date: Date(),
                                image: UIImage(named: "TestPlantImage")?
@@ -68,7 +69,7 @@ struct TestData {
             name: "MiMiNoRiki",
             species: "Unknown",
             birthDay: Date(),
-            wateringDay: [Date()],
+            wateringDay: [WateringDay(dayText: "Sat", dateInfo: Date())],
             diary: [
                 DiaryDataModel(date: Date(),
                                image: UIImage(named: "TestPlantImage")?
@@ -94,7 +95,7 @@ struct TestData {
             name: "Albes",
             species: "Allowari",
             birthDay: Date(),
-            wateringDay: [Date(), Date(), Date()],
+            wateringDay: [WateringDay(dayText: "Sat", dateInfo: Date())],
             diary: [
                 DiaryDataModel(date: Date(),
                                image: UIImage(named: "TestPlantImage")?
@@ -120,7 +121,7 @@ struct TestData {
             name: "Races",
             species: "Happy tree set",
             birthDay: Date(),
-            wateringDay: [Date()],
+            wateringDay: [WateringDay(dayText: "Sat", dateInfo: Date())],
             diary: [
                 DiaryDataModel(date: Date(),
                                image: UIImage(named: "TestPlantImage")?

@@ -13,6 +13,11 @@ struct PlantInformationModel: Hashable, Identifiable, Codable {
     var name: String
     var species: String
     var birthDay: Date
-    var wateringDay: [Date]
+    var wateringDay: [WateringDay]
     var diary: [DiaryDataModel]
+}
+
+struct WateringDay: Hashable, Codable {
+    var dayText: String
+    var dateInfo: Date
 }
