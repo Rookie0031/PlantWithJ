@@ -19,6 +19,8 @@ struct RegisterNewPlantView: View {
     @State private var species: String = ""
     @State private var birthday: Date = Date()
     
+    let notificationCenter = UNUserNotificationCenter.current()
+    
     var body: some View {
         
         VStack(spacing: 25) {
@@ -65,6 +67,7 @@ struct RegisterNewPlantView: View {
             } else {
                 BottomButton(title: "Save") {
                     saveNewPlantData()
+                    setNotification()
                     presentationMode.wrappedValue.dismiss()
                 }
             }
@@ -85,5 +88,42 @@ struct RegisterNewPlantView: View {
             diary: [])
         
         if !storage.plantData.contains(where: { $0.id == newPlantData.id }) { storage.plantData.append(newPlantData) }
+    }
+    
+    private func setNotification() {
+        notificationCenter.getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                let title = "🍀💧Watering Remind💧🍀"
+                let message = "Time to water your plants"
+                
+                if settings.authorizationStatus == .authorized {
+                    let content = UNMutableNotificationContent()
+                    content.title = title
+                    content.body = message
+                    
+                    if !viewModel.selectedRemindTimes.isEmpty {
+                        for dateInfo in viewModel.selectedRemindTimes {
+                            var dateComponent = Calendar.autoupdatingCurrent.dateComponents(
+                                [.hour, .minute], from: dateInfo.time)
+                            
+                            dateComponent.weekday = dateInfo.day.toWeekDayComponent()
+                            
+                            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponent,
+                                                                        repeats: true)
+                            let request = UNNotificationRequest(identifier: UUID().uuidString,
+                                                                content: content, trigger: trigger)
+                            self.notificationCenter.add(request) { error in
+                                if let error {
+                                    print(error)
+                                    return
+                                }
+                            }
+                            print("request에 요청된 날짜 정보는 다음과 같습니다. \(dateComponent)") // Test
+                            print("notification center에 요청된 정보는 다음과 같습니다 \(request)") // Test
+                        }
+                    }
+                }
+            }
+        }
     }
 }

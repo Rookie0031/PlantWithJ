@@ -16,6 +16,7 @@ struct FirstRegisterPlantView: View {
     @State private var name: String = ""
     @State private var species: String = ""
     @State private var birthday: Date = Date()
+    let notificationCenter = UNUserNotificationCenter.current()
     
     var body: some View {
         
@@ -44,8 +45,8 @@ struct FirstRegisterPlantView: View {
                             selectedImageData = data
                         }
                     }
-            }
-            .padding() //photo picker ends
+                }
+                .padding() //photo picker ends
             
             
             PlantInfoSetHStackView(text: $name, type: .textInfo, guideText: "Name", placeholer: "Name of plant")
@@ -68,12 +69,13 @@ struct FirstRegisterPlantView: View {
                     BottomButtonUI(title: "Next")
                 }
             }
-
+            
         }
         .navigationTitle("New Plant")
         .navigationBarTitleDisplayMode(.inline)
         .onDisappear {
             saveFirstPlantData()
+            setNotification()
         }
     }
     
@@ -88,12 +90,41 @@ struct FirstRegisterPlantView: View {
         
         if !storage.plantData.contains(where: { $0.id == firstPlantData.id }) { storage.plantData.append(firstPlantData) }
     }
-}
-
-struct ContentView_Preview_Regiter: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            FirstRegisterPlantView(viewModel: DateSelectViewModel())
+    
+    private func setNotification() {
+        notificationCenter.getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                let title = "🍀💧Watering Remind💧🍀"
+                let message = "Time to water your plants"
+                
+                if settings.authorizationStatus == .authorized {
+                    let content = UNMutableNotificationContent()
+                    content.title = title
+                    content.body = message
+                    
+                    if !viewModel.selectedRemindTimes.isEmpty {
+                        for dateInfo in viewModel.selectedRemindTimes {
+                            var dateComponent = Calendar.autoupdatingCurrent.dateComponents(
+                                [.hour, .minute], from: dateInfo.time)
+                            
+                            dateComponent.weekday = dateInfo.day.toWeekDayComponent()
+                            
+                            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponent,
+                                                                        repeats: true)
+                            let request = UNNotificationRequest(identifier: UUID().uuidString,
+                                                                content: content, trigger: trigger)
+                            self.notificationCenter.add(request) { error in
+                                if let error {
+                                    print(error)
+                                    return
+                                }
+                            }
+                            print("request에 요청된 날짜 정보는 다음과 같습니다. \(dateComponent)") // Test
+                            print("notification center에 요청된 정보는 다음과 같습니다 \(request)") // Test
+                        }
+                    }
+                }
+            }
         }
     }
 }
