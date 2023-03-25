@@ -34,7 +34,6 @@ struct RegisterNewPlantView: View {
                         Image(uiImage: uiImage)
                             .resizable()
                             .frame(width: 200, height: 200)
-                            .scaledToFit()
                             .clipShape(Circle())
                     } else {
                         Image("PicturePlaceholder")

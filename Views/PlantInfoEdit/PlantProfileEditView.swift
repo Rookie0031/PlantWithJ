@@ -34,13 +34,12 @@ struct PlantProfileEditView: View {
                         Image(uiImage: uiImage)
                             .resizable()
                             .frame(width: 200, height: 200)
-                            .scaledToFit()
                             .clipShape(Circle())
                     } else {
                         Image(uiImage: UIImage(data: data.imageData) ?? UIImage())
                             .resizable()
                             .frame(width: 200, height: 200, alignment: .center)
-                            .cornerRadius(10)
+                            .clipShape(Circle())
                     }
                 }
                 .onChange(of: selectedItem) { newItem in

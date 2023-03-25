@@ -73,7 +73,7 @@ struct PlantProfileCardView: View {
                     .resizable()
                     .cornerRadius(10)
                     .frame(width: 200, height: 200)
-                    .scaledToFit()
+                    .clipShape(Circle())
                 
                 VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 10) {

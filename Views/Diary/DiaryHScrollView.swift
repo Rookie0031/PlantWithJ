@@ -40,8 +40,7 @@ struct PlantDiaryCardView: View {
                 Image(uiImage: UIImage(data: data.image) ?? UIImage())
                         .resizable()
                         .frame(width: 200, height: 200, alignment: .center)
-                        .cornerRadius(10)
-                        .scaledToFit()
+                        .clipShape(Circle())
                     
                 LightGrayText(text: data.diaryTitle)
                 }
