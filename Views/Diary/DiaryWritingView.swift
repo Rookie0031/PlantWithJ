@@ -52,7 +52,7 @@ struct DiaryWritingView: View {
                     Text("Date")
                         .padding(.horizontal, 30)
                     
-                    DatePicker("Select a date", selection: $selectedDate, in: Date()..., displayedComponents: [.date])
+                    DatePicker("Select a date", selection: $selectedDate, in: ...Date(), displayedComponents: [.date])
                         .datePickerStyle(.compact)
                         .labelsHidden()
                     
@@ -97,6 +97,7 @@ struct DiaryWritingView: View {
             } else {
                 BottomButton(title: "Save") {
                     saveNewPlantData()
+                    saveData(with: storage.plantData)
                     presentationMode.wrappedValue.dismiss()
                 }
             }

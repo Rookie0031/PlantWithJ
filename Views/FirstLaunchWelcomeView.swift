@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FirstLaunchWelcomeView: View {
-    @EnvironmentObject var data: PlantDataStorage
+    
     var body: some View {
         VStack {
             Spacer()
@@ -20,27 +20,12 @@ struct FirstLaunchWelcomeView: View {
             Spacer()
             
             NavigationLink {
-                MyPlantView(items: data.plantData) {
-                    PlantDataStorage.saveLocalData(data: data.plantData) { result in
-                        if case .failure(let error) = result {
-                            fatalError(error.localizedDescription)
-                        }
-                    }
-                }
+                MyPlantView()
                     .navigationBarBackButtonHidden()
                     .navigationBarTitleDisplayMode(.large)
             } label: {
                 BottomButtonUI(title: "Start")
             }
-        }
-    }
-}
-
-struct FirstRegisteringLaunchScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            FirstLaunchWelcomeView()
-                .environmentObject(PlantDataStorage())
         }
     }
 }

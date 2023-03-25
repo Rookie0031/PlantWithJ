@@ -41,14 +41,3 @@ struct PlantInfoSetHStackView: View {
         .padding(.horizontal, 40)
     }
 }
-
-struct PlantInfoSetHStackView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            VStack {
-                PlantInfoSetHStackView(text: .constant("dasd"), type: .reminder, guideText: "dasdas", placeholer: "dasdasdadasdads")
-                PlantBirthDaySetHstackView(selectedDate: .constant(Date()), guideText: "dasdas")
-            }
-        }
-    }
-}

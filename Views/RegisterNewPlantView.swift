@@ -58,7 +58,7 @@ struct RegisterNewPlantView: View {
             
             PlantBirthDaySetHstackView(selectedDate: $birthday, guideText: "Birthday")
             
-            PlantWateringRemindStack(viewModel: viewModel, type: .reminder, guideText: "Water Remind")
+            PlantWateringRemindSetView(viewModel: viewModel, type: .reminder, guideText: "Water Remind")
             
             Spacer()
             
@@ -68,6 +68,7 @@ struct RegisterNewPlantView: View {
                 BottomButton(title: "Save") {
                     saveNewPlantData()
                     setNotification()
+                    saveData(with: storage.plantData)
                     presentationMode.wrappedValue.dismiss()
                 }
             }

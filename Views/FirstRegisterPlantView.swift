@@ -16,6 +16,14 @@ struct FirstRegisterPlantView: View {
     @State private var name: String = ""
     @State private var species: String = ""
     @State private var birthday: Date = Date()
+    
+    @State private var newPlantData: PlantInformationModel = PlantInformationModel(
+        imageData: Data(),
+        name: "",
+        species: "",
+        birthDay: Date(),
+        wateringDay: [],
+        diary: [])
     let notificationCenter = UNUserNotificationCenter.current()
     
     var body: some View {
@@ -47,15 +55,14 @@ struct FirstRegisterPlantView: View {
                     }
                 }
                 .padding() //photo picker ends
-            
-            
+                
             PlantInfoSetHStackView(text: $name, type: .textInfo, guideText: "Name", placeholer: "Name of plant")
             
             PlantInfoSetHStackView(text: $species, type: .textInfo, guideText: "Species", placeholer: "Species of plant")
             
             PlantBirthDaySetHstackView(selectedDate: $birthday, guideText: "Birthday")
             
-            PlantWateringRemindStack(viewModel: viewModel, type: .reminder, guideText: "Water Remind")
+            PlantWateringRemindSetView(viewModel: viewModel, type: .reminder, guideText: "Water Remind")
             
             Spacer()
             
@@ -76,26 +83,31 @@ struct FirstRegisterPlantView: View {
         .onDisappear {
             saveFirstPlantData()
             setNotification()
+            saveData(with: storage.plantData)
         }
     }
     
+    //MARK: OnDisappear가 두번 실행되서 데이터 저장시 분기처리가 필요
     private func saveFirstPlantData() {
-        let firstPlantData: PlantInformationModel = PlantInformationModel(
-            imageData: selectedImageData ?? Data(),
-            name: name,
-            species: species,
-            birthDay: birthday,
-            wateringDay: viewModel.selectedRemindTimes.map({ WateringDay(dayText: $0.day, dateInfo: $0.time) }),
-            diary: [])
+        newPlantData.imageData = selectedImageData ?? Data()
+        newPlantData.name = name
+        newPlantData.species = species
+        newPlantData.birthDay = birthday
+        newPlantData.wateringDay = viewModel.selectedRemindTimes.map({ WateringDay(dayText: $0.day, dateInfo: $0.time) })
+        print(newPlantData.wateringDay)
         
-        if !storage.plantData.contains(where: { $0.id == firstPlantData.id }) { storage.plantData.append(firstPlantData) }
+        if !storage.plantData.contains(where: { $0.id == newPlantData.id }) { storage.plantData.append(newPlantData)
+        } else {
+            let plantIndex = storage.plantData.firstIndex { $0.id == newPlantData.id }!
+            storage.plantData[plantIndex].wateringDay = newPlantData.wateringDay
+        }
     }
     
     private func setNotification() {
         notificationCenter.getNotificationSettings { settings in
             DispatchQueue.main.async {
                 let title = "🍀💧Watering Remind💧🍀"
-                let message = "Time to water your plants"
+                let message = "Time to water your 🪴\(newPlantData.name)🪴"
                 
                 if settings.authorizationStatus == .authorized {
                     let content = UNMutableNotificationContent()
@@ -119,8 +131,6 @@ struct FirstRegisterPlantView: View {
                                     return
                                 }
                             }
-                            print("request에 요청된 날짜 정보는 다음과 같습니다. \(dateComponent)") // Test
-                            print("notification center에 요청된 정보는 다음과 같습니다 \(request)") // Test
                         }
                     }
                 }

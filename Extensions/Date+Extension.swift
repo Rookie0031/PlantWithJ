@@ -84,3 +84,10 @@ extension Date {
     }
 }
 
+extension Date {
+    func toRegularFormat() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter.string(from: self)
+    }
+}

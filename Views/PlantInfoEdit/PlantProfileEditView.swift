@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-
-import SwiftUI
 import PhotosUI
 
 struct PlantProfileEditView: View {
@@ -23,7 +21,6 @@ struct PlantProfileEditView: View {
     @State private var birthday: Date = Date()
     
     let data: PlantInformationModel
-    let notificationCenter = UNUserNotificationCenter.current()
     
     var body: some View {
         
@@ -69,6 +66,7 @@ struct PlantProfileEditView: View {
             BottomButton(title: "Save") {
                 saveEditedInformation()
                 setNotification()
+                saveData(with: storage.plantData)
                 self.presentationMode.wrappedValue.dismiss()
             }
             
@@ -125,7 +123,7 @@ struct PlantProfileEditView: View {
                                                                         repeats: true)
                             let request = UNNotificationRequest(identifier: UUID().uuidString,
                                                                 content: content, trigger: trigger)
-                            self.notificationCenter.add(request) { error in
+                            notificationCenter.add(request) { error in
                                 if let error {
                                     print(error)
                                     return

@@ -24,6 +24,7 @@ struct PlantReminderEditView: View {
                 
                 NavigationLink {
                     WateringDaySelectView(viewModel: viewModel, isEdited: $isEdited)
+                        .onAppear { requestNotifcationAuthorization() }
                 } label: {
                     Text("Edit")
                 }

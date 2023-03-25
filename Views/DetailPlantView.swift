@@ -112,11 +112,3 @@ struct PlantProfileCardView: View {
         .padding(.horizontal, 30) // Plant Card Ends
     }
 }
-
-struct DiaryView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            DetailPlantView(plantData: TestData.dummyPlants.first!)
-        }
-    }
-}

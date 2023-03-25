@@ -10,8 +10,8 @@ import SwiftUI
 struct DiaryHScrollView: View {
     @ObservedObject var viewModel: PlantDataStorage
     let plantid: String
+    
     var body: some View {
-            
         ScrollView(.horizontal) {
             LazyHStack(spacing: 20) {
                 ForEach(viewModel.plantData.first(where: { $0.id == plantid
@@ -25,17 +25,19 @@ struct DiaryHScrollView: View {
 
 struct PlantDiaryCardView: View {
     let data: DiaryDataModel
+    
     var body: some View {
             VStack(alignment: .center, spacing: 10) {
                     
-                Text(data.date.hourAndminuteText())
+                Text(data.date.toRegularFormat())
                         .font(.titleText)
                         .foregroundColor(.deepGreen)
                     
                 Image(uiImage: UIImage(data: data.image) ?? UIImage())
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
                         .frame(width: 200, height: 200, alignment: .center)
+                        .cornerRadius(10)
+                        .aspectRatio(contentMode: .fill)
                     
                 LightGrayText(text: data.diaryText)
                 }

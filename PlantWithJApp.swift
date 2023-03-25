@@ -16,14 +16,8 @@ struct PlantWithJApp: App {
         WindowGroup {
             if launchedBefore {
                 NavigationStack {
-                    MyPlantView(items: dataStorage.plantData) {
-                        PlantDataStorage.saveLocalData(data: dataStorage.plantData) { result in
-                            if case .failure(let error) = result {
-                                fatalError(error.localizedDescription)
-                            }
-                        }
-                    }
-                    .environmentObject(dataStorage)
+                    MyPlantView()
+                        .environmentObject(dataStorage)
                 }
                 .onAppear {
                     PlantDataStorage.loadLocalData { result in

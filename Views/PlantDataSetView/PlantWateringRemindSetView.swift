@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct PlantWateringRemindStack: View {
+struct PlantWateringRemindSetView: View {
     
     @ObservedObject var viewModel: DateSelectViewModel
     @State private var dummyBool: Bool = false
@@ -23,6 +23,7 @@ struct PlantWateringRemindStack: View {
                 
                 NavigationLink {
                     WateringDaySelectView(viewModel: viewModel, isEdited: $dummyBool)
+                        .onAppear { requestNotifcationAuthorization() }
                 } label: {
                     Text("Set")
                 }

@@ -10,8 +10,6 @@ import SwiftUI
 struct MyPlantView: View {
     @EnvironmentObject var storage: PlantDataStorage
     @Environment(\.scenePhase) private var scenePhase
-    let items: [PlantInformationModel]
-    let saveAction: ()->Void
     
     let columns: [GridItem] = [
         GridItem(.adaptive(minimum: 150)),
@@ -21,27 +19,27 @@ struct MyPlantView: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 10) {
-                ForEach(items, id: \.id) { item in
+                ForEach(storage.plantData, id: \.id) { plant in
                     NavigationLink {
-                        DetailPlantView(plantData: item)
+                        DetailPlantView(plantData: plant)
                             .environmentObject(storage)
                             .navigationTitle("Plant Profile")
                             .navigationBarTitleDisplayMode(.inline)
                     } label: {
                         VStack(alignment: .center, spacing: 8) {
-                            Image(uiImage: UIImage(data: item.imageData) ?? UIImage())
+                            Image(uiImage: UIImage(data: plant.imageData) ?? UIImage())
                                 .resizable()
                                 .frame(height: 200)
                                 .aspectRatio(contentMode: .fit)
                                 .cornerRadius(10)
                             
                             VStack(alignment: .leading) {
-                                Text(item.name)
+                                Text(plant.name)
                                     .font(.headline)
                                     .foregroundColor(.black)
                                     .fontWeight(.bold)
                                 
-                                Text(item.species)
+                                Text(plant.species)
                                     .font(.subheadline)
                                     .foregroundColor(.deepGreen)
                             }
@@ -74,21 +72,7 @@ struct MyPlantView: View {
             }
         }
         .onChange(of: scenePhase) { phase in
-            if phase == .inactive { saveAction() }
-        }
-    }
-}
-
-struct MyPlantView_Preview: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            MyPlantView(items: TestData.dummyPlants) {
-                PlantDataStorage.saveLocalData(data: TestData.dummyPlants) { result in
-                    if case .failure(let error) = result {
-                        fatalError(error.localizedDescription)
-                    }
-                }
-            }
+            if phase == .inactive { saveData(with: storage.plantData) }
         }
     }
 }
