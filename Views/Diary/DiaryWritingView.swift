@@ -70,7 +70,7 @@ struct DiaryWritingView: View {
                 }
                 .padding(.trailing, 10)
                 
-                VStack {
+                VStack(spacing: -20) {
                     ZStack(alignment: .topLeading) {
                         TextEditor(text: $diaryTitle)
                             .scrollContentBackground(.hidden)
@@ -117,12 +117,14 @@ struct DiaryWritingView: View {
             
             if text.isEmpty || selectedImageData == nil {
                 BottomButtonInActive(title: "Save")
+                    .padding(.bottom, 10)
             } else {
                 BottomButton(title: "Save") {
                     saveNewPlantData()
                     saveData(with: storage.plantData)
                     presentationMode.wrappedValue.dismiss()
                 }
+                .padding(.bottom, 10)
             }
         }
         .onTapGesture { UIApplication.shared.endEditing() }
