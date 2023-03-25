@@ -13,13 +13,12 @@ struct DetailPlantView: View {
     var body: some View {
         ScrollView(.vertical) {
             LazyVStack(alignment: .leading,spacing: 30) {
-                PlantProfileCardView(storage: viewModel, data: viewModel.plantData.first(where: {
-                    $0.id == plantData.id
-                }) ?? PlantInformationModel(imageData: Data(), name: "error", species: "", birthDay: Date(), wateringDay: [], diary: []))
+                PlantProfileCardView(storage: viewModel,
+                                     data: viewModel.plantData.first(where: { $0.id == plantData.id }) ?? PlantInformationModel(imageData: Data(), name: "error", species: "", birthDay: Date(), wateringDay: [], diary: []))
                 
                 VStack {
                     HStack {
-                        Text("History")
+                        Text("Diary")
                             .font(.largeTitleText)
                         
                         Spacer()
@@ -58,7 +57,9 @@ struct PlantProfileCardView: View {
                 Spacer()
                 
                 NavigationLink {
-                    PlantProfileEditView(storage: storage, viewModel: DateSelectViewModel(), data: data)
+                    PlantProfileEditView(storage: storage,
+                                         viewModel: DateSelectViewModel(),
+                                         data: data)
                 } label: {
                     Image(systemName: "pencil.circle")
                         .resizable()
@@ -71,8 +72,8 @@ struct PlantProfileCardView: View {
                 Image(uiImage: UIImage(data: data.imageData) ?? UIImage())
                     .resizable()
                     .cornerRadius(10)
-                    .frame(width: 180, height: 180)
-                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 200, height: 200)
+                    .scaledToFit()
                 
                 VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 10) {

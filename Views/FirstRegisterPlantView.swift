@@ -4,7 +4,7 @@
 //
 //  Created by 장지수 on 2023/03/07.
 //
-
+import UIKit
 import SwiftUI
 import PhotosUI
 
@@ -16,7 +16,7 @@ struct FirstRegisterPlantView: View {
     @State private var name: String = ""
     @State private var species: String = ""
     @State private var birthday: Date = Date()
-    
+    @State private var isKeyboardVisible: Bool = false
     @State private var newPlantData: PlantInformationModel = PlantInformationModel(
         imageData: Data(),
         name: "",
@@ -76,10 +76,21 @@ struct FirstRegisterPlantView: View {
                     BottomButtonUI(title: "Next")
                 }
             }
-            
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+            withAnimation {
+                isKeyboardVisible = true
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            withAnimation {
+                isKeyboardVisible = false
+            }
+        }
+        .onTapGesture { UIApplication.shared.endEditing() }
         .navigationTitle("New Plant")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(isKeyboardVisible)
         .onDisappear {
             saveFirstPlantData()
             setNotification()

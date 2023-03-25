@@ -13,7 +13,9 @@ struct DiaryWritingView: View {
     @State private var selectedDate = Date()
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
+    @State private var diaryTitle: String = ""
     @State private var text: String = ""
+    @State private var isKeyboardVisible = false
     
     let id: String
     
@@ -68,29 +70,50 @@ struct DiaryWritingView: View {
                 }
                 .padding(.trailing, 10)
                 
-                ZStack(alignment: .topLeading) {
-                    TextEditor(text: $text)
-                        .scrollContentBackground(.hidden)
-                        .foregroundColor(.deepGreen)
-                        .font(.basicText)
-                        .background(Color.lightGray)
-                    
-                    if text.isEmpty {
-                        Text("Record growth of your plant")
+                VStack {
+                    ZStack(alignment: .topLeading) {
+                        TextEditor(text: $diaryTitle)
+                            .scrollContentBackground(.hidden)
+                            .foregroundColor(.deepGreen)
                             .font(.basicText)
-                            .foregroundColor(.mainGreen)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 12)
+                            .background(Color.lightGray)
+                        
+                        if diaryTitle.isEmpty {
+                            Text("Diary Title")
+                                .font(.basicText)
+                                .foregroundColor(.mainGreen)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 12)
+                        }
                     }
-                }
-                .frame(height: 200)
-                .padding(5)
-                .background(Color.lightGray)
-                .cornerRadius(15)
+                    .frame(height: 50)
+                    .padding(5)
+                    .background(Color.lightGray)
+                    .cornerRadius(15)
+                    .padding()
+                    
+                    ZStack(alignment: .topLeading) {
+                        TextEditor(text: $text)
+                            .scrollContentBackground(.hidden)
+                            .foregroundColor(.deepGreen)
+                            .font(.basicText)
+                            .background(Color.lightGray)
+                        
+                        if text.isEmpty {
+                            Text("Record growth of your plant")
+                                .font(.basicText)
+                                .foregroundColor(.mainGreen)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 12)
+                        }
+                    }
+                    .frame(height: 200)
+                    .padding(5)
+                    .background(Color.lightGray)
+                    .cornerRadius(15)
                 .padding()
+                }
             }
-            
-            Spacer()
             
             if text.isEmpty || selectedImageData == nil {
                 BottomButtonInActive(title: "Save")
@@ -102,15 +125,37 @@ struct DiaryWritingView: View {
                 }
             }
         }
+        .onTapGesture { UIApplication.shared.endEditing() }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+            withAnimation {
+                isKeyboardVisible = true
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            withAnimation {
+                isKeyboardVisible = false
+            }
+        }
         .navigationTitle("New Diary")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(isKeyboardVisible)
     }
     
     private func saveNewPlantData() {
         let newPlantData: DiaryDataModel = DiaryDataModel(
-            date: selectedDate, image: selectedImageData ?? Data(), diaryText: text)
+            date: selectedDate, image: selectedImageData ?? Data(), diaryText: text, diaryTitle: diaryTitle)
         if let plantDataIndex = storage.plantData.firstIndex(where: { $0.id == self.id }) {
             storage.plantData[plantDataIndex].diary.append(newPlantData)
+        }
+    }
+}
+
+struct DetailDiaryView_Previewsds: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            DiaryWritingView(storage: PlantDataStorage(), id: "")
+                .navigationTitle("New Diary")
+                .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

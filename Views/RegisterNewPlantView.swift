@@ -18,6 +18,7 @@ struct RegisterNewPlantView: View {
     @State private var name: String = ""
     @State private var species: String = ""
     @State private var birthday: Date = Date()
+    @State private var isKeyboardVisible: Bool = false
     
     let notificationCenter = UNUserNotificationCenter.current()
     
@@ -72,10 +73,21 @@ struct RegisterNewPlantView: View {
                     presentationMode.wrappedValue.dismiss()
                 }
             }
-
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+            withAnimation {
+                isKeyboardVisible = true
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            withAnimation {
+                isKeyboardVisible = false
+            }
+        }
+        .onTapGesture { UIApplication.shared.endEditing() }
         .navigationTitle("New Plant")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(isKeyboardVisible)
     }
     
     private func saveNewPlantData() {

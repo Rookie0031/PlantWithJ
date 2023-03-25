@@ -41,9 +41,9 @@ struct PlantDiaryCardView: View {
                         .resizable()
                         .frame(width: 200, height: 200, alignment: .center)
                         .cornerRadius(10)
-                        .aspectRatio(contentMode: .fill)
+                        .scaledToFit()
                     
-                LightGrayText(text: data.diaryText)
+                LightGrayText(text: data.diaryTitle)
                 }
                 .padding()
                 .background(Color.lightGray)

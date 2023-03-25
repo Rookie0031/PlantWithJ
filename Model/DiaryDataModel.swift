@@ -12,4 +12,5 @@ struct DiaryDataModel: Identifiable, Hashable, Codable {
     let date: Date
     let image: Data
     let diaryText: String
+    let diaryTitle: String
 }

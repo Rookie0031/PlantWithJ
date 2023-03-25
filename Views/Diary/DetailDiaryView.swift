@@ -12,6 +12,7 @@ struct DetailDiaryView: View {
     let diaryData: DiaryDataModel
     @State private var imageData: Data = Data()
     @State private var text: String = ""
+    @State private var diaryTitle: String = ""
     @State private var date: Date = Date()
     
     var body: some View {
@@ -43,18 +44,33 @@ struct DetailDiaryView: View {
                 }
                 .padding(.trailing, 10)
                 
-                ZStack(alignment: .topLeading) {
-                    TextEditor(text: $text)
-                        .scrollContentBackground(.hidden)
-                        .foregroundColor(.deepGreen)
-                        .font(.basicText)
-                        .background(Color.lightGray)
-                }
-                .frame(height: 200)
-                .padding(5)
-                .background(Color.lightGray)
-                .cornerRadius(15)
+                VStack {
+                    ZStack(alignment: .topLeading) {
+                        TextEditor(text: $diaryTitle)
+                            .scrollContentBackground(.hidden)
+                            .foregroundColor(.deepGreen)
+                            .font(.basicText)
+                            .background(Color.lightGray)
+                    }
+                    .frame(height: 50)
+                    .padding(5)
+                    .background(Color.lightGray)
+                    .cornerRadius(15)
+                    .padding()
+                    
+                    ZStack(alignment: .topLeading) {
+                        TextEditor(text: $text)
+                            .scrollContentBackground(.hidden)
+                            .foregroundColor(.deepGreen)
+                            .font(.basicText)
+                            .background(Color.lightGray)
+                    }
+                    .frame(height: 200)
+                    .padding(5)
+                    .background(Color.lightGray)
+                    .cornerRadius(15)
                 .padding()
+                }
             }
             Spacer()
         }
@@ -70,11 +86,12 @@ struct DetailDiaryView: View {
         imageData = data.image
         date = data.date
         text = data.diaryText
+        diaryTitle = data.diaryTitle
     }
 }
 
 struct DetailDiaryView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailDiaryView(diaryData: DiaryDataModel(date: Date(), image: Data(), diaryText: "dasdasd"))
+        DetailDiaryView(diaryData: DiaryDataModel(date: Date(), image: Data(), diaryText: "dasdasd", diaryTitle: "dasdasd"))
     }
 }

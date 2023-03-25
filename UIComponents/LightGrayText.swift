@@ -14,7 +14,7 @@ struct LightGrayText: View {
             .frame(width: 150)
             .font(.subtitleText)
             .foregroundColor(.textLightGray)
-            .lineLimit(5)
+            .lineLimit(2)
             .truncationMode(.tail)
     }
 }
