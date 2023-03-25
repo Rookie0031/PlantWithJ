@@ -71,7 +71,7 @@ struct PlantProfileCardView: View {
             VStack(alignment: .center, spacing: 20) {
                 Image(uiImage: UIImage(data: data.imageData) ?? UIImage())
                     .resizable()
-                    .cornerRadius(10)
+                    .scaledToFill()
                     .frame(width: 200, height: 200)
                     .clipShape(Circle())
                 

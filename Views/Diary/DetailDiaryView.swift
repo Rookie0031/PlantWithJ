@@ -19,8 +19,8 @@ struct DetailDiaryView: View {
         VStack(spacing: 40) {
             Image(uiImage: UIImage(data: imageData) ?? UIImage())
                 .resizable()
+                .scaledToFill()
                 .frame(width: 200, height: 200)
-                .scaledToFit()
                 .clipShape(Circle())
             
             VStack(spacing: -10) {
