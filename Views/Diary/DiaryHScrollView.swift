@@ -15,8 +15,12 @@ struct DiaryHScrollView: View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: 20) {
                 ForEach(viewModel.plantData.first(where: { $0.id == plantid
-                })!.diary) { diary in
-                    PlantDiaryCardView(data: diary)
+                })!.diary.sorted(by: { $1.date < $0.date })) { diary in
+                    NavigationLink {
+                        DetailDiaryView(diaryData: diary)
+                    } label: {
+                        PlantDiaryCardView(data: diary)
+                    }
                 }
             }
         }

@@ -19,7 +19,7 @@ struct DetailPlantView: View {
                 
                 VStack {
                     HStack {
-                        Text("Diary")
+                        Text("History")
                             .font(.largeTitleText)
                         
                         Spacer()

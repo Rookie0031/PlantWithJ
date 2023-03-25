@@ -23,7 +23,7 @@ struct MyPlantView: View {
                     NavigationLink {
                         DetailPlantView(plantData: plant)
                             .environmentObject(storage)
-                            .navigationTitle("Plant Profile")
+                            .navigationTitle("Plant Detail")
                             .navigationBarTitleDisplayMode(.inline)
                     } label: {
                         VStack(alignment: .center, spacing: 8) {
