@@ -37,13 +37,15 @@ struct FirstRegisterPlantView: View {
                        let uiImage = UIImage(data: selectedImageData) {
                         Image(uiImage: uiImage)
                             .resizable()
+                            .scaledToFill()
                             .frame(width: 200, height: 200)
                             .clipShape(Circle())
                     } else {
                         Image("PicturePlaceholder")
                             .resizable()
-                            .frame(width: 200, height: 200, alignment: .center)
-                            .cornerRadius(10)
+                            .scaledToFill()
+                            .frame(width: 200, height: 200)
+                            .clipShape(Circle())
                     }
                 }
                 .onChange(of: selectedItem) { newItem in
