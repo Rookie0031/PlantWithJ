@@ -10,6 +10,8 @@ import SwiftUI
 struct MyPlantView: View {
     @EnvironmentObject var storage: PlantDataStorage
     @Environment(\.scenePhase) private var scenePhase
+    @State private var isEditing: Bool = false
+    @State private var showAlert: Bool = false
     
     let columns: [GridItem] = [
         GridItem(.adaptive(minimum: 150)),
@@ -20,34 +22,80 @@ struct MyPlantView: View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 10) {
                 ForEach(storage.plantData, id: \.id) { plant in
-                    NavigationLink {
-                        DetailPlantView(plantData: plant)
-                            .environmentObject(storage)
-                            .navigationTitle("Plant Detail")
-                            .navigationBarTitleDisplayMode(.inline)
-                    } label: {
-                        VStack(alignment: .center, spacing: 8) {
-                            Image(uiImage: UIImage(data: plant.imageData) ?? UIImage())
-                                .resizable()
-                                .frame(height: 200)
-                                .aspectRatio(contentMode: .fit)
-                                .cornerRadius(10)
-                            
-                            VStack(alignment: .leading) {
-                                Text(plant.name)
-                                    .font(.headline)
-                                    .foregroundColor(.black)
-                                    .fontWeight(.bold)
+                    if !isEditing {
+                        NavigationLink {
+                            DetailPlantView(plantData: plant)
+                                .environmentObject(storage)
+                                .navigationTitle("Plant Detail")
+                                .navigationBarTitleDisplayMode(.inline)
+                        } label: {
+                            VStack(alignment: .center, spacing: 8) {
+                                Image(uiImage: UIImage(data: plant.imageData) ?? UIImage())
+                                    .resizable()
+                                    .frame(height: 200)
+                                    .aspectRatio(contentMode: .fit)
+                                    .cornerRadius(10)
                                 
-                                Text(plant.species)
-                                    .font(.subheadline)
-                                    .foregroundColor(.deepGreen)
+                                VStack(alignment: .leading) {
+                                    Text(plant.name)
+                                        .font(.headline)
+                                        .foregroundColor(.black)
+                                        .fontWeight(.bold)
+                                    
+                                    Text(plant.species)
+                                        .font(.subheadline)
+                                        .foregroundColor(.deepGreen)
+                                }
                             }
+                            .padding()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .background(Color.lightGray)
+                            .cornerRadius(10)
                         }
-                        .padding()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.lightGray)
-                        .cornerRadius(10)
+                    } else {
+                        ZStack(alignment: .topTrailing) {
+                            VStack(alignment: .center, spacing: 8) {
+                                Image(uiImage: UIImage(data: plant.imageData) ?? UIImage())
+                                    .resizable()
+                                    .frame(height: 200)
+                                    .aspectRatio(contentMode: .fit)
+                                    .cornerRadius(10)
+                                
+                                VStack(alignment: .leading) {
+                                    Text(plant.name)
+                                        .font(.headline)
+                                        .foregroundColor(.black)
+                                        .fontWeight(.bold)
+                                    
+                                    Text(plant.species)
+                                        .font(.subheadline)
+                                        .foregroundColor(.deepGreen)
+                                }
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .background(Color.lightGray)
+                            .cornerRadius(10)
+                            
+                            Button(action: {
+                                showAlert = true
+                            }, label: {
+                                Image(systemName: "minus.circle")
+                                    .foregroundColor(.red)
+                            })
+                        }
+                        .alert(isPresented: $showAlert) {
+                            Alert(
+                                title: Text("Plant Delete"),
+                                message: Text("Are you sure you want to delete \(plant.name)?"),
+                                primaryButton: .destructive(Text("Delete")) {
+                                    storage.plantData.removeAll { $0.id == plant.id }
+                                    saveData(with: storage.plantData)
+                                    showAlert = false
+                                },
+                                secondaryButton: .cancel()
+                            )
+                        }
                     }
                 }
             }
@@ -60,14 +108,23 @@ struct MyPlantView: View {
         })
         .navigationTitle("Growing Plants")
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink {
-                    RegisterNewPlantView(storage: storage, viewModel: DateSelectViewModel())
-                } label: {
-                    Image(systemName: "plus.circle")
-                        .resizable()
-                        .frame(width: 20, height: 20, alignment: .center)
-                        .foregroundColor(.deepGreen)
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                HStack(spacing: -1) {
+                    Button(action: {
+                        isEditing.toggle()
+                    }, label: {
+                        Image(systemName: "trash.circle")
+                            .foregroundColor(.deepGreen)
+                    })
+                    
+                    NavigationLink {
+                        RegisterNewPlantView(storage: storage, viewModel: DateSelectViewModel())
+                    } label: {
+                        Image(systemName: "plus.circle")
+                            .resizable()
+                            .frame(width: 20, height: 20, alignment: .center)
+                            .foregroundColor(.deepGreen)
+                    }
                 }
             }
         }

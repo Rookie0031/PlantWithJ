@@ -89,9 +89,3 @@ struct DetailDiaryView: View {
         diaryTitle = data.diaryTitle
     }
 }
-
-struct DetailDiaryView_Previews: PreviewProvider {
-    static var previews: some View {
-        DetailDiaryView(diaryData: DiaryDataModel(date: Date(), image: Data(), diaryText: "dasdasd", diaryTitle: "dasdasd"))
-    }
-}
