@@ -26,12 +26,16 @@ struct PlantWithJApp: App {
                             fatalError(error.localizedDescription)
                         case .success(let plantData):
                             dataStorage.plantData = plantData
+                            MusicPlayer.shared.startBackgroundMusic()
                         }
                     }
                 }
             } else {
                 LaunchScreen()
                     .environmentObject(dataStorage)
+                    .onAppear {
+                        MusicPlayer.shared.startBackgroundMusic()
+                    }
             }
         }
     }

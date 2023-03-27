@@ -12,6 +12,7 @@ struct MyPlantView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var isEditing: Bool = false
     @State private var showAlert: Bool = false
+    @State private var isBackgroundMusicOn: Bool = true
     
     let columns: [GridItem] = [
         GridItem(.adaptive(minimum: 150)),
@@ -109,6 +110,7 @@ struct MyPlantView: View {
         .navigationTitle("Growing Plants")
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
+                
                 HStack(spacing: -1) {
                     Button(action: {
                         isEditing.toggle()
@@ -126,6 +128,21 @@ struct MyPlantView: View {
                             .foregroundColor(.deepGreen)
                     }
                 }
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    if isBackgroundMusicOn {
+                        MusicPlayer.shared.stopBackgroundMusic()
+                    } else {
+                        MusicPlayer.shared.startBackgroundMusic()
+                    }
+                    isBackgroundMusicOn.toggle()
+                }, label: {
+                    Image(systemName: isBackgroundMusicOn ? "speaker.wave.2" : "speaker.slash")
+                        .foregroundColor(.deepGreen)
+                })
             }
         }
         .onChange(of: scenePhase) { phase in
