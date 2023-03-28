@@ -14,14 +14,20 @@ struct DetailDiaryView: View {
     @State private var text: String = ""
     @State private var diaryTitle: String = ""
     @State private var date: Date = Date()
+    @State private var isShowingFullImage: Bool = false
     
     var body: some View {
         VStack(spacing: 40) {
-            Image(uiImage: UIImage(data: imageData) ?? UIImage())
-                .resizable()
-                .scaledToFill()
-                .frame(width: 200, height: 200)
-                .clipShape(Circle())
+            Button(action: {
+                self.isShowingFullImage = true
+                print("Tapped")
+            }) {
+                Image(uiImage: UIImage(data: imageData) ?? UIImage())
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 200, height: 200)
+                    .clipShape(Circle())
+            }
             
             VStack(spacing: -10) {
                 HStack {
@@ -72,12 +78,17 @@ struct DetailDiaryView: View {
                 .padding()
                 }
             }
+            .disabled(true)
+            
             Spacer()
+            
         }
         .onAppear(perform: {
             configureData(with: diaryData)
         })
-        .disabled(true)
+        .sheet(isPresented: $isShowingFullImage) {
+            PlantImageView(imageData: imageData)
+        }
         .navigationTitle("Diary")
         .navigationBarTitleDisplayMode(.inline)
     }

@@ -39,13 +39,13 @@ struct PlantDiaryCardView: View {
                     
                 Image(uiImage: UIImage(data: data.image) ?? UIImage())
                         .resizable()
-                        .frame(width: 200, height: 200, alignment: .center)
-                        .clipShape(Circle())
+                        .frame(width: 190, height: 253, alignment: .center)
+                        .cornerRadius(10)
                     
                 LightGrayText(text: data.diaryTitle)
                 }
                 .padding()
                 .background(Color.lightGray)
-                .cornerRadius(20)
+                .cornerRadius(10)
     }
 }

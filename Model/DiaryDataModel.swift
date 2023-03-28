@@ -8,7 +8,7 @@
 import Foundation
 
 struct DiaryDataModel: Identifiable, Hashable, Codable {
-    let id: String = UUID().uuidString
+    var id: String = UUID().uuidString
     let date: Date
     let image: Data
     let diaryText: String
