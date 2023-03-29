@@ -15,8 +15,8 @@ struct MyPlantView: View {
     @State private var isBackgroundMusicOn: Bool = true
     
     let columns: [GridItem] = [
-        GridItem(.adaptive(minimum: 150)),
-        GridItem(.adaptive(minimum: 150))
+        GridItem(.adaptive(minimum: 130)),
+        GridItem(.adaptive(minimum: 130))
     ]
     
     var body: some View {
@@ -33,9 +33,9 @@ struct MyPlantView: View {
                             VStack(alignment: .center, spacing: 8) {
                                 Image(uiImage: UIImage(data: plant.imageData) ?? UIImage())
                                     .resizable()
-                                    .frame(height: 200)
-                                    .aspectRatio(contentMode: .fit)
-                                    .cornerRadius(10)
+                                    .scaledToFill()
+                                    .frame(width: 140, height: 140)
+                                    .clipShape(Circle())
                                 
                                 VStack(alignment: .leading) {
                                     Text(plant.name)
