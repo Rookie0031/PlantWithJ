@@ -11,7 +11,7 @@ struct WateringDaySelectView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: DateSelectViewModel
     @Binding var isEdited: Bool
-    private let weekDays: [String] = ["Monday", "Tuesday", "Wednesday", "Thurday", "Friday", "Saturday", "Sunday"]
+    private let weekDays: [String] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     
     var body: some View {
         
@@ -22,7 +22,7 @@ struct WateringDaySelectView: View {
             
             WeekdayHstack(isSelected: $viewModel.remindTimes[2].isSelected, selectedDate: $viewModel.remindTimes[2].time, dayText: "Wednesday")
             
-            WeekdayHstack(isSelected: $viewModel.remindTimes[3].isSelected, selectedDate: $viewModel.remindTimes[3].time, dayText: "Thurday")
+            WeekdayHstack(isSelected: $viewModel.remindTimes[3].isSelected, selectedDate: $viewModel.remindTimes[3].time, dayText: "Thursday")
             
             WeekdayHstack(isSelected: $viewModel.remindTimes[4].isSelected, selectedDate: $viewModel.remindTimes[4].time, dayText: "Friday")
             
