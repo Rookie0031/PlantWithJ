@@ -18,7 +18,6 @@ struct PlantProfileEditView: View {
     @State private var selectedImageData: Data? = nil
     @State private var name: String = ""
     @State private var species: String = ""
-    @State private var birthday: Date = Date()
     
     let data: PlantInformationModel
     
@@ -58,7 +57,7 @@ struct PlantProfileEditView: View {
             
             PlantInfoSetHStackView(text: $species, type: .textInfo, guideText: "Species", placeholer: data.species)
             
-            PlantBirthDayEditView(selectedDate: data.birthDay, guideText: "Birthday")
+            PlantBirthDayEditView(storage: storage,selectedDate: storage.plantData.specifiedPlant(with: data.id).birthDay, guideText: "Birthday", plantId: data.id)
             
             PlantReminderEditView(viewModel: viewModel, isEdited: $isReminderEdited, remindDay: data.wateringDay, guideText: "Water Remind")
             
@@ -85,10 +84,6 @@ struct PlantProfileEditView: View {
         
         if !self.species.isEmpty {
             storage.plantData[originalPlantDataIndex].species = self.species
-        }
-        
-        if storage.plantData[originalPlantDataIndex].birthDay != data.birthDay {
-            storage.plantData[originalPlantDataIndex].birthDay = self.birthday
         }
         
         if self.selectedImageData != nil {

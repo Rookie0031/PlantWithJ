@@ -46,10 +46,11 @@ struct DetailPlantView: View {
 
 struct PlantProfileCardView: View {
     @ObservedObject var storage: PlantDataStorage
+    @State private var isShowingFullImage: Bool = false
     let data: PlantInformationModel
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            //MARK: 여기 다른 데이터로 바꾸기
             HStack {
                 Text(data.name)
                     .font(.largeTitleText)
@@ -69,11 +70,15 @@ struct PlantProfileCardView: View {
             }
             
             VStack(alignment: .center, spacing: 20) {
-                Image(uiImage: UIImage(data: data.imageData) ?? UIImage())
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 200, height: 200)
-                    .clipShape(Circle())
+                Button(action: {
+                    self.isShowingFullImage = true
+                }) {
+                    Image(uiImage: UIImage(data: data.imageData) ?? UIImage())
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 200, height: 200)
+                        .clipShape(Circle())
+                }
                 
                 VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 10) {
@@ -109,6 +114,9 @@ struct PlantProfileCardView: View {
             .padding()
             .background(Color.lightGray)
             .cornerRadius(20)
+            .sheet(isPresented: $isShowingFullImage) {
+                PlantImageView(imageData: data.imageData)
+            }
         }
         .padding(.horizontal, 30) // Plant Card Ends
     }

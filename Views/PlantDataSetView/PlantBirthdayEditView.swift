@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct PlantBirthDayEditView: View {
+    
+    @ObservedObject var storage: PlantDataStorage
     @State var selectedDate: Date
     let guideText: String
+    let plantId: String
     
     @State var text: String = ""
     var body: some View {
@@ -21,6 +24,10 @@ struct PlantBirthDayEditView: View {
             DatePicker("Select a date", selection: $selectedDate, in: ...Date(), displayedComponents: [.date])
                 .datePickerStyle(.compact)
                 .labelsHidden()
+                .onChange(of: selectedDate) { newValue in
+                    let index = storage.plantData.indexOfPlant(with: plantId)
+                    storage.plantData[index].birthDay = selectedDate
+                }
         }
         .padding(.horizontal, 40)
     }
