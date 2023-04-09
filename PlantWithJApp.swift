@@ -23,7 +23,7 @@ struct PlantWithJApp: App {
                     PlantDataStorage.loadLocalData { result in
                         switch result {
                         case .failure(let error):
-                            fatalError(error.localizedDescription)
+                            print("Data Load Error: \(error)")
                         case .success(let plantData):
                             dataStorage.plantData = plantData
                             MusicPlayer.shared.startBackgroundMusic()
