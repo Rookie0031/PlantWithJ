@@ -108,7 +108,7 @@ struct RegisterNewPlantView: View {
         notificationCenter.getNotificationSettings { settings in
             DispatchQueue.main.async {
                 let title = "🍀💧Watering Remind💧🍀"
-                let message = "Time to water your plants"
+                let message = "Time to water your 🪴\(name)🪴"
                 
                 if settings.authorizationStatus == .authorized {
                     let content = UNMutableNotificationContent()
