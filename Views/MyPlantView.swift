@@ -10,10 +10,12 @@ import SwiftUI
 struct MyPlantView: View {
     @EnvironmentObject var storage: PlantDataStorage
     @Environment(\.scenePhase) private var scenePhase
+    @State private var deletingPlantName: String = ""
+    
+    @State private var showModalForSignUp: Bool = false
+    @State private var isBackgroundMusicOn: Bool = true
     @State private var isEditing: Bool = false
     @State private var showAlert: Bool = false
-    @State private var isBackgroundMusicOn: Bool = true
-    @State private var deletingPlantName: String = ""
     
     let columns: [GridItem] = [
         GridItem(.adaptive(minimum: 130)),
@@ -104,9 +106,19 @@ struct MyPlantView: View {
             }
             .padding()
         }
+        .sheet(isPresented: $showModalForSignUp) {
+            LoginView()
+                .environmentObject(storage)
+        }
         .onAppear(perform: {
             if !UserDefaults().bool(forKey: "launchedBefore") {
                 UserDefaults.standard.set(true, forKey: "launchedBefore")
+            }
+        })
+        .onAppear(perform: {
+            if !UserDefaults().bool(forKey: "SignedUpBefore") {
+                showModalForSignUp = true
+                UserDefaults.standard.set(true, forKey: "SignedUpBefore")
             }
         })
         .navigationTitle("Growing Plants")
