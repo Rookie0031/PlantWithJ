@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DataTransferView: View {
-    @EnvironmentObject var storage: PlantDataStorage
+    @ObservedObject var storage: PlantDataStorage
     var body: some View {
         VStack {
             Spacer()
@@ -26,7 +26,11 @@ struct DataTransferView: View {
             Spacer()
             
             Button(action: {
-                print("")
+                storage.uploadSinglePlantData(storage.plantData.first!) { error in
+                    if let error {
+                        print("There's an error in data transfer process: \(error)")
+                    }
+                }
             }) {
                     Text("Next")
                         .frame(maxWidth: .infinity)
@@ -39,14 +43,10 @@ struct DataTransferView: View {
         }
         .padding()
     }
-    
-    private func transferDeviceData() {
-        
-    }
 }
 
 struct DataTransferView_Previews: PreviewProvider {
     static var previews: some View {
-        DataTransferView()
+        DataTransferView(storage: PlantDataStorage())
     }
 }

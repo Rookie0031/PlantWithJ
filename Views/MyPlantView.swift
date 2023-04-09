@@ -107,7 +107,7 @@ struct MyPlantView: View {
             .padding()
         }
         .sheet(isPresented: $showModalForSignUp) {
-            LoginView()
+            SignUpView()
                 .environmentObject(storage)
         }
         .onAppear(perform: {

@@ -7,8 +7,9 @@
 import Firebase
 import SwiftUI
 
-struct LoginView: View {
+struct SignUpView: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var storage: PlantDataStorage
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var confirmedPassword: String = ""
@@ -19,16 +20,22 @@ struct LoginView: View {
             
             Spacer()
             
-            Text("Sign Up")
+            Text("Try Sign Up!")
                 .font(.largeTitle)
                 .bold()
-            Text("You can also share your data on your iPad")
-                .font(.headline)
+            
+            VStack {
+                Text("You can share your data")
+                    .font(.headline)
+                
+                Text("on your iPad")
+                    .font(.headline)
+            }
             
             
             Image("PlantWihJoy")
                 .resizable()
-                .frame(width: 250, height: 250, alignment:.center)
+                .frame(width: 200, height: 200, alignment:.center)
             
             
             TextField("Email", text: $email)
@@ -80,7 +87,7 @@ struct LoginView: View {
         }
         .padding()
         .sheet(isPresented: $isSignUpSuccessful) {
-            DataTransferView()
+            DataTransferView(storage: storage)
         }
     }
     
@@ -125,6 +132,6 @@ struct LoginView: View {
 
 struct LogInView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView()
+        SignUpView()
     }
 }

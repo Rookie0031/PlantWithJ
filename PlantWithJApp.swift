@@ -24,30 +24,31 @@ struct PlantWithJApp: App {
     
     var body: some Scene {
         WindowGroup {
-            LoginView()
-//            if launchedBefore {
-//                NavigationStack {
-//                    MyPlantView()
-//                        .environmentObject(dataStorage)
-//                }
-//                .onAppear {
-//                    PlantDataStorage.loadLocalData { result in
-//                        switch result {
-//                        case .failure(let error):
-//                            print("Data Load Error: \(error)")
-//                        case .success(let plantData):
-//                            dataStorage.plantData = plantData
-//                            MusicPlayer.shared.startBackgroundMusic()
-//                        }
-//                    }
-//                }
-//            } else {
-//                LaunchScreen()
-//                    .environmentObject(dataStorage)
-//                    .onAppear {
-//                        MusicPlayer.shared.startBackgroundMusic()
-//                    }
-//            }
+//            SignUpView()
+//                .environmentObject(dataStorage)
+            if launchedBefore {
+                NavigationStack {
+                    MyPlantView()
+                        .environmentObject(dataStorage)
+                }
+                .onAppear {
+                    PlantDataStorage.loadLocalData { result in
+                        switch result {
+                        case .failure(let error):
+                            print("Data Load Error: \(error)")
+                        case .success(let plantData):
+                            dataStorage.plantData = plantData
+                            MusicPlayer.shared.startBackgroundMusic()
+                        }
+                    }
+                }
+            } else {
+                LaunchScreen()
+                    .environmentObject(dataStorage)
+                    .onAppear {
+                        MusicPlayer.shared.startBackgroundMusic()
+                    }
+            }
         }
     }
 }

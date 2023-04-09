@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import FirebaseStorage
 import Foundation
 
 final class PlantDataStorage: ObservableObject {
+    private let storage = Storage.storage()
+    private let storageRef = Storage.storage().reference()
+    
     @Published var plantData: [PlantInformationModel] = []
 
     private static func fileURL() throws -> URL {
@@ -62,4 +66,39 @@ final class PlantDataStorage: ObservableObject {
         }
     }
 }
-
+//MARK: Firebase
+extension PlantDataStorage {
+    func uploadSinglePlantData(_ plantInfo: PlantInformationModel, completion: @escaping (Error?) -> Void) {
+        let imageRef = storageRef.child("images/\(plantInfo.id).jpg")
+        guard let imageData = UIImage(data: plantInfo.imageData)?.jpegData(compressionQuality: 0.4) else {
+            completion(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Error converting image data to JPEG format"]))
+            return
+        }
+        
+        let metaData = StorageMetadata()
+        metaData.contentType = "image/jpeg"
+        
+        imageRef.putData(imageData, metadata: metaData) { (metaData, error) in
+            if let error = error {
+                completion(error)
+                return
+            }
+            
+            let plantInfoRef = self.storageRef.child("plantData/\(plantInfo.id).json")
+            let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .iso8601
+            do {
+                let plantInfoData = try encoder.encode(plantInfo)
+                plantInfoRef.putData(plantInfoData, metadata: nil) { (metaData, error) in
+                    if let error = error {
+                        completion(error)
+                        return
+                    }
+                    print("Data Transfer Successful")
+                }
+            } catch {
+                completion(error)
+            }
+        }
+    }
+}
