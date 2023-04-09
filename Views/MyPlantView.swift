@@ -58,9 +58,9 @@ struct MyPlantView: View {
                             VStack(alignment: .center, spacing: 8) {
                                 Image(uiImage: UIImage(data: plant.imageData) ?? UIImage())
                                     .resizable()
-                                    .frame(height: 200)
-                                    .aspectRatio(contentMode: .fit)
-                                    .cornerRadius(10)
+                                    .scaledToFill()
+                                    .frame(width: 140, height: 140)
+                                    .clipShape(Circle())
                                 
                                 VStack(alignment: .leading) {
                                     Text(plant.name)
