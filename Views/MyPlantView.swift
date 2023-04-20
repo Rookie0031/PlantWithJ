@@ -12,6 +12,8 @@ struct MyPlantView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var isEditing: Bool = false
     @State private var showAlert: Bool = false
+    @State private var deletingPlantName: String = ""
+    @State private var deletingPlantId: String = ""
     @State private var isBackgroundMusicOn: Bool = true
     
     let columns: [GridItem] = [
@@ -80,6 +82,8 @@ struct MyPlantView: View {
                             
                             Button(action: {
                                 showAlert = true
+                                deletingPlantName = plant.name
+                                deletingPlantId = plant.id
                             }, label: {
                                 Image(systemName: "minus.circle")
                                     .foregroundColor(.red)
@@ -88,9 +92,9 @@ struct MyPlantView: View {
                         .alert(isPresented: $showAlert) {
                             Alert(
                                 title: Text("Plant Delete"),
-                                message: Text("Are you sure you want to delete \(plant.name)?"),
+                                message: Text("Are you sure you want to delete \(deletingPlantName)?"),
                                 primaryButton: .destructive(Text("Delete")) {
-                                    storage.plantData.removeAll { $0.id == plant.id }
+                                    storage.plantData.removeAll { $0.id == deletingPlantId }
                                     saveData(with: storage.plantData)
                                     showAlert = false
                                 },

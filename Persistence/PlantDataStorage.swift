@@ -22,8 +22,8 @@ final class PlantDataStorage: ObservableObject {
     static func loadLocalData(completion: @escaping (Result<[PlantInformationModel], Error>)->Void) {
         DispatchQueue.global(qos: .background).async {
             do {
-                // Because data doesn’t exist when a user launches the app for the first time, you call the completion handler with an empty array if there’s an error opening the file handle.
                 let fileURL = try fileURL()
+                print("This is fileURL: \(fileURL)")
                 guard let file = try? FileHandle(forReadingFrom: fileURL) else {
                     DispatchQueue.main.async {
                         completion(.success([]))
