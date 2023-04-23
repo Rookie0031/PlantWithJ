@@ -31,7 +31,7 @@ struct PlantWithJApp: App {
                     }
                 }
             } else {
-                LaunchScreen()
+                LoginView()
                     .environmentObject(dataStorage)
                     .onAppear {
                         MusicPlayer.shared.startBackgroundMusic()

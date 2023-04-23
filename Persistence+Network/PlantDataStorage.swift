@@ -9,7 +9,9 @@ import SwiftUI
 import Foundation
 
 final class PlantDataStorage: ObservableObject {
+    var userId: String = ""
     @Published var plantData: [PlantInformationModel] = []
+    
 
     private static func fileURL() throws -> URL {
         try FileManager.default.url(for: .documentDirectory,
@@ -17,6 +19,10 @@ final class PlantDataStorage: ObservableObject {
                                     appropriateFor: nil,
                                     create: false)
         .appendingPathComponent("Plants.data")
+    }
+    
+    func addPlantInfo(with data: PlantInformationModel) {
+        plantData.append(data)
     }
     
     static func loadLocalData(completion: @escaping (Result<[PlantInformationModel], Error>)->Void) {

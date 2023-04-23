@@ -1,0 +1,80 @@
+//
+//  LoginView.swift
+//  PlantWithJ
+//
+//  Created by 장지수 on 2023/04/23.
+//
+
+import SwiftUI
+
+
+struct LoginView: View {
+    @EnvironmentObject var storage: PlantDataStorage
+    @State private var email: String = ""
+    @State private var password: String = ""
+    @State private var showSignup: Bool = false
+    @State private var isLoginSuccessful: Bool = false
+
+    var body: some View {
+        VStack(spacing: 15) {
+            
+            Spacer()
+            
+            Image("PlantWihJoy")
+                .resizable()
+                .frame(width: 250, height: 250, alignment: .center)
+            
+            TextField("Email", text: $email)
+                .textFieldStyle(.roundedBorder)
+
+            SecureField("Password", text: $password)
+                .textFieldStyle(.roundedBorder)
+            
+            Spacer()
+            
+            
+            VStack(spacing: 30) {
+                Button {
+                    Task {
+                        let userId = await FirebaseManager.shared.signInUser(email: email, password: password) {
+                            isLoginSuccessful.toggle()
+                        }
+                        storage.userId = userId!
+                    }
+                } label: {
+                    Text("Login")
+                        .frame(width: 300, height: 50, alignment: .center)
+                        .font(.buttonContent.bold())
+                        .foregroundColor(.white)
+                        .background(Color.deepGreen)
+                        .cornerRadius(30)
+                }
+                
+                Button("Don't have an account?", action: {
+                    showSignup.toggle()
+                })
+            }
+            .padding()
+        }
+        .padding()
+        .frame(width: screenWidth, height: screenHeight, alignment: .center)
+        .background(Color.mainGreen.opacity(0.8))
+        .toolbar(.hidden)
+        .navigationDestination(isPresented: $showSignup) { SignupView() }
+        .navigationDestination(isPresented: $isLoginSuccessful) {
+            MyPlantView()
+                .environmentObject(storage)
+                .navigationBarBackButtonHidden(true)
+        }
+    }
+}
+
+
+struct LoginView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            LoginView()
+                .environmentObject(PlantDataStorage())
+        }
+    }
+}
