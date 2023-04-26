@@ -16,7 +16,6 @@ struct DiaryWritingView: View {
     @State private var diaryTitle: String = ""
     @State private var text: String = ""
     @State private var isKeyboardVisible = false
-    
     let id: String
     
     var body: some View {
@@ -121,9 +120,13 @@ struct DiaryWritingView: View {
                     .padding(.bottom, 10)
             } else {
                 BottomButton(title: "Save") {
-                    saveNewPlantData()
-                    saveData(with: storage.plantData)
-                    presentationMode.wrappedValue.dismiss()
+                    Task {
+                        let newDiary: DiaryDataModel = DiaryDataModel(
+                            date: selectedDate, image: selectedImageData ?? Data(), diaryText: text, diaryTitle: diaryTitle)
+                        await FirebaseManager.shared.addPlantDiary(with: newDiary, plantId: id)
+                        storage.plantData = await FirebaseManager.shared.loadData()
+                        presentationMode.wrappedValue.dismiss()
+                    }
                 }
                 .padding(.bottom, 10)
             }
@@ -142,14 +145,6 @@ struct DiaryWritingView: View {
         .navigationTitle("New Diary")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarHidden(isKeyboardVisible)
-    }
-    
-    private func saveNewPlantData() {
-        let newPlantData: DiaryDataModel = DiaryDataModel(
-            date: selectedDate, image: selectedImageData ?? Data(), diaryText: text, diaryTitle: diaryTitle)
-        if let plantDataIndex = storage.plantData.firstIndex(where: { $0.id == self.id }) {
-            storage.plantData[plantDataIndex].diary.append(newPlantData)
-        }
     }
 }
 

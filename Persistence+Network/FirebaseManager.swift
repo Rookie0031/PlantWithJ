@@ -136,14 +136,91 @@ final class FirebaseManager: NSObject {
         }
     }
     
+    func editPlantProfile(with data: PlantInformationModel) async {
+        guard let uid = auth.currentUser?.uid else { return } // 유저가 접속여부인지 먼저 체크
+        do {
+            print("Data Store function called, User uid is this : \(uid)")
+            guard let profileImageData = UIImage(data: data.imageData)?.jpegData(compressionQuality: 0.3) else { return }
+            
+            // Create a root reference
+            let storageRef = storage.reference()
+
+            // Create a reference to the file you want to upload
+            let plantProfileRef = storageRef.child("images/\(UUID().uuidString).jpg")
+            
+            let result = try await plantProfileRef.putDataAsync(profileImageData, metadata: nil)
+            print("PlandProfile Image Upload result: \(result)")
+            
+            let plantProfileURL = try await plantProfileRef.downloadURL().absoluteString
+            
+            // 저장하려는 데이터를 딕셔너리 형태로 만듬
+            let plantProfile = [
+                "id": data.id,
+                "name": data.name,
+                "profileImageURL": plantProfileURL,
+                "species": data.species,
+                "birthday": data.birthDay.formatted(date: .abbreviated, time: .shortened)
+            ] as [String : Any]
+            
+            try await firestore.collection("user").document(uid).collection("Plants").document(data.id).updateData(plantProfile)
+            
+            for datum in data.wateringDay {
+                let dateInfo = datum.dateInfo.formatted(date: .abbreviated, time: .shortened)
+                let dayText = datum.dayText
+                
+                let wateringDay = [
+                    "dateInfo": dateInfo,
+                    "dayText": dayText,
+                ] as [String : Any]
+                
+                try await firestore.collection("user").document(uid).collection("Plants").document(data.id).collection("WateringDays").document(data.id).updateData(wateringDay)
+            }
+        } catch {
+            print("Data Stroing error occured: \(error)")
+        }
+    }
+    
+    func addPlantDiary(with data: DiaryDataModel, plantId: String) async {
+        guard let uid = auth.currentUser?.uid else { return } // 유저가 접속여부인지 먼저 체크
+        do {
+            print("Diary Store function called, User uid is this : \(uid)")
+            guard let diaryPic = UIImage(data: data.image)?.jpegData(compressionQuality: 0.3) else { return }
+            
+            // Create a root reference
+            let storageRef = storage.reference()
+            
+            // Create a reference to the file you want to upload
+            let plantProfileRef = storageRef.child("images/\(UUID().uuidString).jpg")
+            
+            // Image Upload
+            _ = try await plantProfileRef.putDataAsync(diaryPic, metadata: nil)
+            
+            let plantProfileURL = try await plantProfileRef.downloadURL().absoluteString
+            
+            // 저장하려는 데이터를 딕셔너리 형태로 만듬
+            let plantDiary = [
+                "id": data.id,
+                "diaryTitle": data.diaryTitle,
+                "diaryPicture": plantProfileURL,
+                "diaryText": data.diaryText,
+                "diaryDate": data.date.formatted(date: .abbreviated, time: .shortened)
+            ] as [String : Any]
+            
+            try await firestore.collection("user").document(uid).collection("Plants").document(plantId).collection("Diary").document(data.id).setData(plantDiary)
+            
+        } catch {
+            print("Data Stroing error occured: \(error)")
+        }
+    }
+    
     func loadData() async -> [PlantInformationModel] {
         var dataSet: [PlantInformationModel] = []
         guard let uid = auth.currentUser?.uid else { return [] }
+        
         let ref = firestore.collection("user").document(uid).collection("Plants")
         
         do {
             let documents = try await ref.getDocuments().documents
-            print("Loaded Document Count: \(documents.count)")
             for document in documents {
                 let birthdayString = document["birthday"] as? String ?? ""
                 let plantId = document["id"] as? String ?? ""
@@ -154,8 +231,6 @@ final class FirebaseManager: NSObject {
                 var diaries: [DiaryDataModel] = []
                 
                 let profileImageData = try await fetchOneImage(withURL: profileURL)
-                print("Image URL is this : \(profileURL)")
-                print("Image Data is this : \(profileImageData)")
                 let birdayDate = birthdayString.toDate() ?? Date()
                 
                 let wateringDaysDoc = try await document.reference.collection("WateringDays").getDocuments().documents
@@ -169,16 +244,16 @@ final class FirebaseManager: NSObject {
                     wateringDays.append(wateringDay)
                 }
                 
-                let diaryDocs = try await document.reference.collection("Diaries").getDocuments().documents
+                let diaryDocs = try await document.reference.collection("Diary").getDocuments().documents
                 
                 if !diaryDocs.isEmpty {
                     for diaryDoc in diaryDocs {
                         let id = diaryDoc["id"] as? String ?? ""
-                        let dateString = diaryDoc["date"] as? String ?? ""
+                        let dateString = diaryDoc["diaryDate"] as? String ?? ""
                         let date = dateString.toDate() ?? Date()
                         let diaryTitle = diaryDoc["diaryTitle"] as? String ?? ""
                         let diaryText = diaryDoc["diaryText"] as? String ?? ""
-                        let imageURL = diaryDoc["imageURL"] as? String ?? ""
+                        let imageURL = diaryDoc["diaryPicture"] as? String ?? ""
                         let imageData = try await fetchOneImage(withURL: imageURL)
                         
                         let diary = DiaryDataModel(id: id, date: date, image: imageData, diaryText: diaryText, diaryTitle: diaryTitle)
@@ -206,7 +281,6 @@ final class FirebaseManager: NSObject {
                 async let (data, urlResponse) = URLSession.shared.data(from: imageRequestURL)
                 try await self.cachedImages.setObject(data as NSData, forKey: url as NSString)
                 let httpResponse = try await urlResponse as! HTTPURLResponse
-                print("Image Network proceed, response is this : \(httpResponse)")
                 if !(200...299).contains(httpResponse.statusCode) {
                     print("bad status code: \(httpResponse.statusCode)")
                 }

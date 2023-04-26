@@ -144,7 +144,7 @@ struct FirstRegisterPlantView: View {
                             
                             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponent,
                                                                         repeats: true)
-                            let request = UNNotificationRequest(identifier: UUID().uuidString,
+                            let request = UNNotificationRequest(identifier: name,
                                                                 content: content, trigger: trigger)
                             self.notificationCenter.add(request) { error in
                                 if let error {

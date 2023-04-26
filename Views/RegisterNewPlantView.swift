@@ -19,59 +19,64 @@ struct RegisterNewPlantView: View {
     @State private var species: String = ""
     @State private var birthday: Date = Date()
     @State private var isKeyboardVisible: Bool = false
+    @State private var isUploading: Bool = false
     
     let notificationCenter = UNUserNotificationCenter.current()
     
     var body: some View {
         
-        VStack(spacing: 25) {
-            PhotosPicker(
-                selection: $selectedItem,
-                matching: .images,
-                photoLibrary: .shared()) {
-                    if let selectedImageData,
-                       let uiImage = UIImage(data: selectedImageData) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 200, height: 200)
-                            .clipShape(Circle())
+        ZStack {
+            if isUploading {
+                ProgressView("🍀 Now Regstering new plant... 🍀")
+            } else {
+                VStack(spacing: 25) {
+                    PhotosPicker(
+                        selection: $selectedItem,
+                        matching: .images,
+                        photoLibrary: .shared()) {
+                            if let selectedImageData,
+                               let uiImage = UIImage(data: selectedImageData) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 200, height: 200)
+                                    .clipShape(Circle())
+                            } else {
+                                Image("PicturePlaceholder")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 200, height: 200)
+                                    .clipShape(Circle())
+                            }
+                        }
+                        .onChange(of: selectedItem) { newItem in
+                            Task {
+                                if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                                    selectedImageData = data
+                                }
+                            }
+                        }
+                        .padding() //photo picker ends
+                    
+                    
+                    PlantInfoSetHStackView(text: $name, type: .textInfo, guideText: "Name", placeholer: "Name of plant")
+                    
+                    PlantInfoSetHStackView(text: $species, type: .textInfo, guideText: "Species", placeholer: "Species of plant")
+                    
+                    PlantBirthDaySetHstackView(selectedDate: $birthday, guideText: "Birthday")
+                    
+                    PlantWateringRemindSetView(viewModel: viewModel, type: .reminder, guideText: "Water Remind")
+                    
+                    Spacer()
+                    
+                    if name.isEmpty || species.isEmpty || selectedImageData == nil {
+                        BottomButtonInActive(title: "Save")
                     } else {
-                        Image("PicturePlaceholder")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 200, height: 200)
-                            .clipShape(Circle())
-                    }
-                }
-                .onChange(of: selectedItem) { newItem in
-                    Task {
-                        if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                            selectedImageData = data
+                        BottomButton(title: "Save") {
+                            saveNewPlantData()
+                            setNotification()
                         }
                     }
-            }
-            .padding() //photo picker ends
-            
-            
-            PlantInfoSetHStackView(text: $name, type: .textInfo, guideText: "Name", placeholer: "Name of plant")
-            
-            PlantInfoSetHStackView(text: $species, type: .textInfo, guideText: "Species", placeholer: "Species of plant")
-            
-            PlantBirthDaySetHstackView(selectedDate: $birthday, guideText: "Birthday")
-            
-            PlantWateringRemindSetView(viewModel: viewModel, type: .reminder, guideText: "Water Remind")
-            
-            Spacer()
-            
-            if name.isEmpty || species.isEmpty || selectedImageData == nil {
-                BottomButtonInActive(title: "Save")
-            } else {
-                BottomButton(title: "Save") {
-                    saveNewPlantData()
-                    setNotification()
-                    saveData(with: storage.plantData)
-                    presentationMode.wrappedValue.dismiss()
                 }
             }
         }
@@ -102,7 +107,10 @@ struct RegisterNewPlantView: View {
             diary: [])
         
         Task {
+            isUploading = true
             await FirebaseManager.shared.addPlantProfile(with: newPlantData)
+            storage.plantData = await FirebaseManager.shared.loadData()
+            presentationMode.wrappedValue.dismiss()
         }
         
         if !storage.plantData.contains(where: { $0.id == newPlantData.id }) { storage.plantData.append(newPlantData) }
@@ -128,7 +136,7 @@ struct RegisterNewPlantView: View {
                             
                             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponent,
                                                                         repeats: true)
-                            let request = UNNotificationRequest(identifier: UUID().uuidString,
+                            let request = UNNotificationRequest(identifier: name,
                                                                 content: content, trigger: trigger)
                             self.notificationCenter.add(request) { error in
                                 if let error {

@@ -8,14 +8,14 @@ import UIKit
 import SwiftUI
 
 struct MyPlantView: View {
-    @StateObject var storage: PlantDataStorage = PlantDataStorage()
+    @EnvironmentObject var storage: PlantDataStorage
     @Environment(\.scenePhase) private var scenePhase
     @State private var isEditing: Bool = false
     @State private var showAlert: Bool = false
     @State private var deletingPlantName: String = ""
     @State private var deletingPlantId: String = ""
     @State private var isBackgroundMusicOn: Bool = true
-    @State private var isDataLoding: Bool = false
+    @State private var isDataLoading: Bool = false
     
     let columns: [GridItem] = [
         GridItem(.adaptive(minimum: 130)),
@@ -24,7 +24,7 @@ struct MyPlantView: View {
     
     var body: some View {
         ZStack {
-            if isDataLoding {
+            if !storage.isDataFirstLoaded {
                 ProgressView("🍀 Now getting your plants! 🍀")
             }
             else {
@@ -119,20 +119,15 @@ struct MyPlantView: View {
                 UserDefaults.standard.set(true, forKey: "launchedBefore")
             }
             Task {
-                print("Data Loading Process starts")
-                isDataLoding = true
-                storage.plantData = await FirebaseManager.shared.loadData()
-                isDataLoding = false
-                print("Data Loading Process Ends")
-                print("Loaded Data count: \(storage.plantData)")
-                print("============== Loaded Data is this ==============")
-                print(storage.plantData)
+                if !storage.isDataFirstLoaded {
+                    storage.plantData = await FirebaseManager.shared.loadData()
+                    storage.isDataFirstLoaded = true
+                }
             }
         })
         .navigationTitle("Growing Plants")
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                
                 HStack(spacing: -1) {
                     Button(action: {
                         isEditing.toggle()
