@@ -21,6 +21,7 @@ struct FirstLaunchWelcomeView: View {
             
             NavigationLink {
                 MyPlantView()
+                    .environmentObject(PlantDataStorage())
                     .navigationBarBackButtonHidden()
                     .navigationBarTitleDisplayMode(.large)
             } label: {

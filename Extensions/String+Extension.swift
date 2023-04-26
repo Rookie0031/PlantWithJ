@@ -21,3 +21,20 @@ extension String {
         }
     }
 }
+
+extension String {
+    func toDate() -> Date? {
+        // Create a DateFormatter
+        let dateFormatter = DateFormatter()
+
+        // Set the date format
+        dateFormatter.dateFormat = "yyyy년 MM월 dd일 a hh:mm"
+
+        // Set the locale to the user's device locale
+        dateFormatter.locale = Locale.current
+
+        // Attempt to parse the date string to a Date object
+        return dateFormatter.date(from: self)
+    }
+}
+

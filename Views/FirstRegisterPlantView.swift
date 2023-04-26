@@ -11,6 +11,7 @@ import PhotosUI
 struct FirstRegisterPlantView: View {
     @EnvironmentObject var storage: PlantDataStorage
     @ObservedObject var viewModel: DateSelectViewModel
+    @State private var navigateToNext: Bool = false
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
     @State private var name: String = ""
@@ -56,7 +57,7 @@ struct FirstRegisterPlantView: View {
                     }
                 }
                 .padding() //photo picker ends
-                
+            
             PlantInfoSetHStackView(text: $name, type: .textInfo, guideText: "Name", placeholer: "Name of plant")
             
             PlantInfoSetHStackView(text: $species, type: .textInfo, guideText: "Species", placeholer: "Species of plant")
@@ -67,9 +68,10 @@ struct FirstRegisterPlantView: View {
             
             Spacer()
             
-            NavigationLink {
-                FirstLaunchWelcomeView()
-                    .navigationBarBackButtonHidden()
+            Button {
+                saveFirstPlantData()
+                setNotification()
+                navigateToNext = true
             } label: {
                 if name.isEmpty || species.isEmpty || selectedImageData == nil {
                     BottomButtonInActive(title: "Next")
@@ -78,6 +80,11 @@ struct FirstRegisterPlantView: View {
                 }
             }
         }
+        .navigationDestination(isPresented: $navigateToNext, destination: {
+            FirstLaunchWelcomeView()
+                .environmentObject(storage)
+                .navigationBarBackButtonHidden()
+        })
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
             withAnimation {
                 isKeyboardVisible = true
@@ -107,6 +114,8 @@ struct FirstRegisterPlantView: View {
         newPlantData.birthDay = birthday
         newPlantData.wateringDay = viewModel.selectedRemindTimes.map({ WateringDay(dayText: $0.day, dateInfo: $0.time) })
         print(newPlantData.wateringDay)
+        
+        Task { await FirebaseManager.shared.addPlantProfile(with: newPlantData) }
         
         if !storage.plantData.contains(where: { $0.id == newPlantData.id }) { storage.plantData.append(newPlantData)
         } else {

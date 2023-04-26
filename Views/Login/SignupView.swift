@@ -62,7 +62,7 @@ struct SignupView: View {
         .frame(width: screenWidth, height: screenHeight, alignment: .center)
         .background(Color.mainGreen.opacity(0.8))
         .navigationDestination(isPresented: $isSignUpSuccessful) {
-            MyPlantView()
+            LaunchScreen()
                 .environmentObject(storage)
                 .navigationBarBackButtonHidden(true)
         }

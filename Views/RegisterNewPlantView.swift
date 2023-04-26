@@ -101,6 +101,10 @@ struct RegisterNewPlantView: View {
                 .map({ WateringDay(dayText: $0.day, dateInfo: $0.time) }),
             diary: [])
         
+        Task {
+            await FirebaseManager.shared.addPlantProfile(with: newPlantData)
+        }
+        
         if !storage.plantData.contains(where: { $0.id == newPlantData.id }) { storage.plantData.append(newPlantData) }
     }
     

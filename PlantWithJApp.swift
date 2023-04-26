@@ -4,11 +4,22 @@
 //
 //  Created by 장지수 on 2023/03/07.
 //
-import Foundation
 import SwiftUI
+import Firebase
+import FirebaseCore
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        FirebaseApp.configure()
+        return true
+    }
+}
+
 
 @main
 struct PlantWithJApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var dataStorage = PlantDataStorage()
     let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
     
@@ -19,23 +30,15 @@ struct PlantWithJApp: App {
                     MyPlantView()
                         .environmentObject(dataStorage)
                 }
-                .onAppear {
-                    PlantDataStorage.loadLocalData { result in
-                        switch result {
-                        case .failure(let error):
-                            print("Data Load Error Occured: \(error)")
-                        case .success(let plantData):
-                            dataStorage.plantData = plantData
+                .onAppear { MusicPlayer.shared.startBackgroundMusic() }
+            } else {
+                NavigationStack {
+                    LoginView()
+                        .environmentObject(dataStorage)
+                        .onAppear {
                             MusicPlayer.shared.startBackgroundMusic()
                         }
-                    }
                 }
-            } else {
-                LoginView()
-                    .environmentObject(dataStorage)
-                    .onAppear {
-                        MusicPlayer.shared.startBackgroundMusic()
-                    }
             }
         }
     }
