@@ -59,13 +59,13 @@ struct PlantProfileEditView: View {
             
             PlantBirthDayEditView(storage: storage,selectedDate: storage.plantData.specifiedPlant(with: data.id).birthDay, guideText: "Birthday", plantId: data.id)
             
-            PlantReminderEditView(viewModel: viewModel, isEdited: $isReminderEdited, remindDay: data.wateringDay, guideText: "Water Remind", name: name)
+            PlantReminderEditView(viewModel: viewModel, isEdited: $isReminderEdited, remindDay: data.wateringDay, guideText: "Water Remind")
             
             Spacer()
             
             BottomButton(title: "Save") {
                 saveEditedInformation()
-                saveNotification()
+                saveEditedNotification()
                 saveData(with: storage.plantData)
                 self.presentationMode.wrappedValue.dismiss()
             }
@@ -104,7 +104,7 @@ struct PlantProfileEditView: View {
         notificationCenter.getNotificationSettings { settings in
             DispatchQueue.main.async {
                 let title = "🍀💧Watering Remind💧🍀"
-                let message = "Time to water your plants"
+                let message = "Time to water your 🪴\(name)🪴"
                 
                 if settings.authorizationStatus == .authorized {
                     let content = UNMutableNotificationContent()
