@@ -23,15 +23,26 @@ struct LoginView: View {
                 
                 Spacer()
                 
-                Image("PlantWihJoy")
-                    .resizable()
-                    .frame(width: 250, height: 250, alignment: .center)
+                VStack {
+                    
+                    Image("PlantWihJoy")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 330, height: 330, alignment: .center)
+                    
+                    Text("🌱 Grow with your plant 🌱")
+                        .font(.titleText)
+                        .foregroundColor(.deepGreen)
+                        .padding(.bottom, 30)
+                }
                 
                 TextField("Email", text: $email)
                     .textFieldStyle(.roundedBorder)
+                    .frame(width: 300)
                 
                 SecureField("Password", text: $password)
                     .textFieldStyle(.roundedBorder)
+                    .frame(width: 300)
                 
                 Spacer()
                 

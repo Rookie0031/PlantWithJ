@@ -68,7 +68,7 @@ struct WeekdayHstack: View {
                 DatePicker("", selection: $selectedDate, displayedComponents: .hourAndMinute)
                     .onAppear {
                         let calendar = Calendar.current
-                        let defaultTime = calendar.date(bySettingHour: 21, minute: 0, second: 0, of: Date()) ?? Date()
+                        let defaultTime = calendar.date(bySettingHour: 9, minute: 0, second: 0, of: Date()) ?? Date()
                         selectedDate = defaultTime
                     }
             }

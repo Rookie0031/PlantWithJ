@@ -10,6 +10,7 @@ import Foundation
 
 final class PlantDataStorage: ObservableObject {
     var userId: String = ""
+    @Published var isLoggedIn: Bool = false
     @Published var isDataFirstLoaded: Bool = false
     @Published var plantData: [PlantInformationModel] = []
     

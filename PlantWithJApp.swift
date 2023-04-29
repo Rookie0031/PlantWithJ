@@ -25,19 +25,23 @@ struct PlantWithJApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if launchedBefore {
-                NavigationStack {
+            NavigationStack {
+                if Auth.auth().currentUser != nil {
                     MyPlantView()
                         .environmentObject(dataStorage)
-                }
-                .onAppear { MusicPlayer.shared.startBackgroundMusic() }
-            } else {
-                NavigationStack {
+                        .onAppear { dataStorage.isLoggedIn = true }
+                } else {
                     LoginView()
                         .environmentObject(dataStorage)
-                        .onAppear {
-                            MusicPlayer.shared.startBackgroundMusic()
-                        }
+                }
+            }
+            .onAppear {
+                MusicPlayer.shared.startBackgroundMusic()
+                
+                if !UserDefaults().bool(forKey: "launchedBefore") {
+                    UserDefaults.standard.set(true, forKey: "launchedBefore")
+                } else {
+                    MusicPlayer.shared.startBackgroundMusic()
                 }
             }
         }

@@ -31,12 +31,15 @@ struct SignupView: View {
             VStack(spacing: 20) {
                 TextField("Email", text: $email)
                     .textFieldStyle(.roundedBorder)
+                    .frame(width: 300)
                 
                 SecureField("Password", text: $password)
                     .textFieldStyle(.roundedBorder)
+                    .frame(width: 300)
                 
                 SecureField("Confirm Password", text: $confirmPassword)
                     .textFieldStyle(.roundedBorder)
+                    .frame(width: 300)
             }
             .padding(.top, 50)
             

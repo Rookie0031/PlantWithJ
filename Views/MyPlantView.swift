@@ -128,7 +128,7 @@ struct MyPlantView: View {
         .navigationTitle("Growing Plants")
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                HStack(spacing: -1) {
+                HStack(spacing: 4) {
                     Button(action: {
                         isEditing.toggle()
                     }, label: {
@@ -141,7 +141,16 @@ struct MyPlantView: View {
                     } label: {
                         Image(systemName: "plus.circle")
                             .resizable()
-                            .frame(width: 20, height: 20, alignment: .center)
+                            .frame(width: 22, height: 22, alignment: .center)
+                            .foregroundColor(.deepGreen)
+                    }
+                    
+                    NavigationLink {
+                        SettingView(storage: storage)
+                    } label: {
+                        Image(systemName: "gearshape.circle")
+                            .resizable()
+                            .frame(width: 22, height: 22, alignment: .center)
                             .foregroundColor(.deepGreen)
                     }
                 }
