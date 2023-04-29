@@ -115,7 +115,7 @@ struct FirstRegisterPlantView: View {
         newPlantData.wateringDay = viewModel.selectedRemindTimes.map({ WateringDay(dayText: $0.day, dateInfo: $0.time) })
         print(newPlantData.wateringDay)
         
-        Task { await FirebaseManager.shared.addPlantProfile(with: newPlantData) }
+        Task { await FirebaseManager.shared.updatePlantProfile(with: newPlantData) }
         
         if !storage.plantData.contains(where: { $0.id == newPlantData.id }) { storage.plantData.append(newPlantData)
         } else {

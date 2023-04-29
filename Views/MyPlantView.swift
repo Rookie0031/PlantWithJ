@@ -66,9 +66,9 @@ struct MyPlantView: View {
                                     VStack(alignment: .center, spacing: 8) {
                                         Image(uiImage: UIImage(data: plant.imageData) ?? UIImage())
                                             .resizable()
-                                            .frame(height: 200)
-                                            .aspectRatio(contentMode: .fit)
-                                            .cornerRadius(10)
+                                            .scaledToFill()
+                                            .frame(width: 140, height: 140)
+                                            .clipShape(Circle())
                                         
                                         VStack(alignment: .leading) {
                                             Text(plant.name)
@@ -101,7 +101,7 @@ struct MyPlantView: View {
                                         message: Text("Are you sure you want to delete \(deletingPlantName)?"),
                                         primaryButton: .destructive(Text("Delete")) {
                                             storage.plantData.removeAll { $0.id == deletingPlantId }
-                                            saveData(with: storage.plantData)
+                                            deletePlant(with: deletingPlantId)
                                             showAlert = false
                                         },
                                         secondaryButton: .cancel()
@@ -164,6 +164,12 @@ struct MyPlantView: View {
         }
         .onChange(of: scenePhase) { phase in
             if phase == .inactive { saveData(with: storage.plantData) }
+        }
+    }
+    
+    private func deletePlant(with plantId: String) {
+        Task {
+            await FirebaseManager.shared.deletePlant(with: plantId)
         }
     }
 }

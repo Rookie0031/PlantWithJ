@@ -16,7 +16,7 @@ struct PlantProfileEditView: View {
     @State private var isReminderEdited: Bool = false
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
-    @State private var name: String = ""
+    @State private var editedName: String = ""
     @State private var species: String = ""
     
     let data: PlantInformationModel
@@ -53,7 +53,7 @@ struct PlantProfileEditView: View {
                 .padding() //photo picker ends
             
             
-            PlantInfoSetHStackView(text: $name, type: .textInfo, guideText: "Name", placeholer: data.name)
+            PlantInfoSetHStackView(text: $editedName, type: .textInfo, guideText: "Name", placeholer: data.name)
             
             PlantInfoSetHStackView(text: $species, type: .textInfo, guideText: "Species", placeholer: data.species)
             
@@ -67,7 +67,6 @@ struct PlantProfileEditView: View {
                 saveEditedInformation()
                 saveEditedNotification()
                 saveData(with: storage.plantData)
-                self.presentationMode.wrappedValue.dismiss()
             }
             
         }
@@ -76,35 +75,48 @@ struct PlantProfileEditView: View {
     }
     
     private func saveEditedInformation() {
-        let originalPlantDataIndex = storage.plantData.firstIndex { $0.id == data.id }!
+        let updatingPlantDataIndex = storage.plantData.firstIndex { $0.id == data.id }!
         
-        if !self.name.isEmpty {
-            storage.plantData[originalPlantDataIndex].name = self.name
+        if !self.editedName.isEmpty {
+            storage.plantData[updatingPlantDataIndex].name = self.editedName
         }
         
         if !self.species.isEmpty {
-            storage.plantData[originalPlantDataIndex].species = self.species
+            storage.plantData[updatingPlantDataIndex].species = self.species
         }
         
         if self.selectedImageData != nil {
-            storage.plantData[originalPlantDataIndex].imageData = self.selectedImageData ?? Data()
+            storage.plantData[updatingPlantDataIndex].imageData = self.selectedImageData ?? Data()
         }
         
         if self.isReminderEdited {
-            storage.plantData[originalPlantDataIndex].wateringDay = self.viewModel.selectedRemindTimes
+            storage.plantData[updatingPlantDataIndex].wateringDay = self.viewModel.selectedRemindTimes
                 .map({ WateringDay(dayText: $0.day, dateInfo: $0.time)
             })
+        }
+        
+        let updatingPlantData = storage.plantData[updatingPlantDataIndex]
+        
+        Task {
+            await FirebaseManager.shared.updatePlantProfile(with: updatingPlantData)
+            self.presentationMode.wrappedValue.dismiss()
         }
     }
     
     private func saveEditedNotification() {
         
-        notificationCenter.removePendingNotificationRequests(withIdentifiers: [name])
+        notificationCenter.removePendingNotificationRequests(withIdentifiers: [editedName])
         
         notificationCenter.getNotificationSettings { settings in
             DispatchQueue.main.async {
                 let title = "🍀💧Watering Remind💧🍀"
-                let message = "Time to water your 🪴\(name)🪴"
+                var plantName = ""
+                if editedName.isEmpty {
+                    plantName = data.name
+                } else {
+                    plantName = editedName
+                }
+                let message = "Time to water your 🪴\(plantName)🪴"
                 
                 if settings.authorizationStatus == .authorized {
                     let content = UNMutableNotificationContent()

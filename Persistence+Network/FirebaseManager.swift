@@ -92,7 +92,7 @@ final class FirebaseManager: NSObject {
         }
     }
     
-    func addPlantProfile(with data: PlantInformationModel) async {
+    func updatePlantProfile(with data: PlantInformationModel) async {
         guard let uid = auth.currentUser?.uid else { return } // 유저가 접속여부인지 먼저 체크
         do {
             print("Data Store function called, User uid is this : \(uid)")
@@ -100,7 +100,7 @@ final class FirebaseManager: NSObject {
             
             // Create a root reference
             let storageRef = storage.reference()
-
+            
             // Create a reference to the file you want to upload
             let plantProfileRef = storageRef.child("images/\(UUID().uuidString).jpg")
             
@@ -120,17 +120,16 @@ final class FirebaseManager: NSObject {
             
             try await firestore.collection("user").document(uid).collection("Plants").document(data.id).setData(plantProfile)
             
-            for datum in data.wateringDay {
-                let dateInfo = datum.dateInfo.formatted(date: .abbreviated, time: .shortened)
-                let dayText = datum.dayText
-                
-                let wateringDay = [
-                    "dateInfo": dateInfo,
-                    "dayText": dayText,
-                ] as [String : Any]
-                
-                try await firestore.collection("user").document(uid).collection("Plants").document(data.id).collection("WateringDays").document(data.id).setData(wateringDay)
-            }
+            let dateInfo = data.wateringDay.map { $0.dateInfo.formatted(date: .abbreviated, time: .shortened) }
+            let dayText = data.wateringDay.map { $0.dayText }
+            
+            let wateringDay = [
+                "dateInfo": dateInfo,
+                "dayText": dayText,
+            ] as [String : Any]
+            
+            try await firestore.collection("user").document(uid).collection("Plants").document(data.id).collection("WateringDays").document(data.id).setData(wateringDay, merge: true)
+            
         } catch {
             print("Data Stroing error occured: \(error)")
         }
@@ -144,7 +143,7 @@ final class FirebaseManager: NSObject {
             
             // Create a root reference
             let storageRef = storage.reference()
-
+            
             // Create a reference to the file you want to upload
             let plantProfileRef = storageRef.child("images/\(UUID().uuidString).jpg")
             
@@ -173,10 +172,14 @@ final class FirebaseManager: NSObject {
                     "dayText": dayText,
                 ] as [String : Any]
                 
-                try await firestore.collection("user").document(uid).collection("Plants").document(data.id).collection("WateringDays").document(data.id).updateData(wateringDay)
+                let document = firestore.collection("user").document(uid).collection("Plants").document(data.id).collection("WateringDays").document(data.id)
+                
+                print("documentData is this \(document)")
+                
+                try await document.updateData(wateringDay)
             }
         } catch {
-            print("Data Stroing error occured: \(error)")
+            print("Data Editing error occured: \(error)")
         }
     }
     
@@ -209,7 +212,19 @@ final class FirebaseManager: NSObject {
             try await firestore.collection("user").document(uid).collection("Plants").document(plantId).collection("Diary").document(data.id).setData(plantDiary)
             
         } catch {
-            print("Data Stroing error occured: \(error)")
+            print("Data Adding error occured: \(error)")
+        }
+    }
+    
+    func deletePlant(with deletingPlantId: String) async {
+        guard let uid = auth.currentUser?.uid else { return } // 유저가 접속여부인지 먼저 체크
+        
+        do {
+            print("Plant Deleting function called, User uid is this : \(uid)")
+            try await firestore.collection("user").document(uid).collection("Plants").document(deletingPlantId).delete()
+            
+        } catch {
+            print("Data Deleting error occured: \(error)")
         }
     }
     
@@ -236,12 +251,13 @@ final class FirebaseManager: NSObject {
                 let wateringDaysDoc = try await document.reference.collection("WateringDays").getDocuments().documents
                 
                 for wateringDayDoc in wateringDaysDoc {
-                    let dayText = wateringDayDoc["dayText"] as? String ?? ""
-                    let dateInfo = wateringDayDoc["dateInfo"] as? String ?? ""
-                    let wateringDate = dateInfo.toDate() ?? Date()
+                    let dayText = wateringDayDoc["dayText"] as? [String] ?? []
+                    let dateInfo = wateringDayDoc["dateInfo"] as? [String] ?? []
                     
-                    let wateringDay = WateringDay(dayText: dayText, dateInfo: wateringDate)
-                    wateringDays.append(wateringDay)
+                    for index in 0..<dayText.count {
+                        let wateringDay = WateringDay(dayText: dayText[index], dateInfo: dateInfo[index].toDate()!)
+                        wateringDays.append(wateringDay)
+                    }
                 }
                 
                 let diaryDocs = try await document.reference.collection("Diary").getDocuments().documents
@@ -291,7 +307,7 @@ final class FirebaseManager: NSObject {
         }
         return imageData
     }
-
+    
 }
 
 

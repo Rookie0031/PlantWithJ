@@ -108,7 +108,7 @@ struct RegisterNewPlantView: View {
         
         Task {
             isUploading = true
-            await FirebaseManager.shared.addPlantProfile(with: newPlantData)
+            await FirebaseManager.shared.updatePlantProfile(with: newPlantData)
             storage.plantData = await FirebaseManager.shared.loadData()
             presentationMode.wrappedValue.dismiss()
         }

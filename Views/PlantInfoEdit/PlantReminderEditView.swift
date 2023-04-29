@@ -10,7 +10,7 @@ import SwiftUI
 struct PlantReminderEditView: View {
     
     @ObservedObject var viewModel: DateSelectViewModel
-    @State var text: String = ""
+    @State private var text: String = ""
     @Binding var isEdited: Bool
     let remindDay: [WateringDay]
     let guideText: String
