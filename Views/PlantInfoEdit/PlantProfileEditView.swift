@@ -14,7 +14,6 @@ struct PlantProfileEditView: View {
     @StateObject var viewModel: DateSelectViewModel = DateSelectViewModel()
     
     @State private var isReminderEdited: Bool = false
-    @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
     @State private var editedName: String = ""
     @State private var species: String = ""
@@ -25,34 +24,8 @@ struct PlantProfileEditView: View {
     var body: some View {
         
         VStack(spacing: 25) {
-            PhotosPicker(
-                selection: $selectedItem,
-                matching: .images,
-                photoLibrary: .shared()) {
-                    if let selectedImageData,
-                       let uiImage = UIImage(data: selectedImageData) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 200, height: 200)
-                            .clipShape(Circle())
-                    } else {
-                        Image(uiImage: UIImage(data: data.imageData) ?? UIImage())
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 200, height: 200)
-                            .clipShape(Circle())
-                    }
-                }
-                .onChange(of: selectedItem) { newItem in
-                    Task {
-                        if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                            selectedImageData = data
-                        }
-                    }
-                }
-                .padding() //photo picker ends
-            
+            CameraView(imageData: $selectedImageData, originalImageData: data.imageData)
+                .padding()
             
             PlantInfoSetHStackView(text: $editedName, type: .textInfo, guideText: "Name", placeholer: data.name)
             

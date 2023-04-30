@@ -31,21 +31,22 @@ struct PlantDiaryCardView: View {
     let data: DiaryDataModel
     
     var body: some View {
-            VStack(alignment: .center, spacing: 10) {
-                    
-                Text(data.date.toRegularFormat())
-                        .font(.titleText)
-                        .foregroundColor(.deepGreen)
-                    
-                Image(uiImage: UIImage(data: data.image) ?? UIImage())
-                        .resizable()
-                        .frame(width: 190, height: 253, alignment: .center)
-                        .cornerRadius(10)
-                    
-                LightGrayText(text: data.diaryTitle)
-                }
-                .padding()
-                .background(Color.lightGray)
+        VStack(alignment: .center, spacing: 10) {
+            
+            Text(data.date.toRegularFormat())
+                .font(.titleText)
+                .foregroundColor(.deepGreen)
+            
+            Image(uiImage: UIImage(data: data.image) ?? UIImage())
+                .resizable()
+                .scaledToFill()
+                .frame(width: 190, height: 253)
                 .cornerRadius(10)
+            
+            LightGrayText(text: data.diaryTitle)
+        }
+        .padding()
+        .background(Color.lightGray)
+        .cornerRadius(10)
     }
 }

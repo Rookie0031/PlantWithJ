@@ -12,8 +12,8 @@ struct FirstRegisterPlantView: View {
     @EnvironmentObject var storage: PlantDataStorage
     @ObservedObject var viewModel: DateSelectViewModel
     @State private var navigateToNext: Bool = false
-    @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
+    
     @State private var name: String = ""
     @State private var species: String = ""
     @State private var birthday: Date = Date()
@@ -31,33 +31,8 @@ struct FirstRegisterPlantView: View {
     var body: some View {
         
         VStack(spacing: 25) {
-            PhotosPicker(
-                selection: $selectedItem,
-                matching: .images,
-                photoLibrary: .shared()) {
-                    if let selectedImageData,
-                       let uiImage = UIImage(data: selectedImageData) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 200, height: 200)
-                            .clipShape(Circle())
-                    } else {
-                        Image("PicturePlaceholder")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 200, height: 200)
-                            .clipShape(Circle())
-                    }
-                }
-                .onChange(of: selectedItem) { newItem in
-                    Task {
-                        if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                            selectedImageData = data
-                        }
-                    }
-                }
-                .padding() //photo picker ends
+            CameraView(imageData: $selectedImageData, originalImageData: nil)
+                .padding()
             
             PlantInfoSetHStackView(text: $name, type: .textInfo, guideText: "Name", placeholer: "Name of plant")
             
