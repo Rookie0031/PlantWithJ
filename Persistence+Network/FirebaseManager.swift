@@ -27,34 +27,44 @@ final class FirebaseManager: NSObject {
         self.firestore = Firestore.firestore()
     }
     
-    func signInUser(email: String, password: String, completion: ()->Void) async -> String? {
+    func login(email: String, password: String, completion: (_ loginResult: Result<Bool, Error>)->Void) async -> String? {
         do {
             let data = try await auth.signIn(withEmail: email, password: password)
             print("Success LogIn")
-            completion()
+            completion(.success(true))
             return data.user.uid
         } catch {
             print("Failed to LogIn")
+            print("The error message is this \(error)")
+            completion(.failure(error))
             return nil
         }
     }
     
-    func createNewAccount(email: String, password: String, completion: ()->Void) async {
+    func createNewAccount(email: String, password: String, completion: (_ signupResult: Result<Bool, Error>)->Void) async {
         do {
             try await auth.createUser(withEmail: email, password: password)
             print("Successfully created user")
-            completion()
+            completion(.success(true))
+            UserDefaults.standard.set(password, forKey: "PlantWithJoy Password")
         } catch {
             print("Failed to create user")
             print("The error message is this \(error)")
+            completion(.failure(error))
         }
     }
     
     func deleteAccount() async {
+        guard let userPassword = UserDefaults.standard.string(forKey: "PlantWithJoy Password") else { return }
+        guard let user = Auth.auth().currentUser else { return }
+        let credential = EmailAuthProvider.credential(withEmail: user.email!, password: userPassword)
         do {
+            try await user.reauthenticate(with: credential)
             try await auth.currentUser?.delete()
+            print("Account Delete Successful")
         } catch {
-            print("Failed to disconnect friend")
+            print("Failed to delete account.")
+            print("Error Message: \(error)")
         }
     }
     
@@ -294,13 +304,13 @@ final class FirebaseManager: NSObject {
                 
             } else {
                 guard let imageRequestURL = URL(string: url) else { return Data() }
-                async let (data, urlResponse) = URLSession.shared.data(from: imageRequestURL)
-                try await self.cachedImages.setObject(data as NSData, forKey: url as NSString)
-                let httpResponse = try await urlResponse as! HTTPURLResponse
+                let (data, urlResponse) = try await URLSession.shared.data(from: imageRequestURL)
+                self.cachedImages.setObject(data as NSData, forKey: url as NSString)
+                let httpResponse = urlResponse as! HTTPURLResponse
                 if !(200...299).contains(httpResponse.statusCode) {
                     print("bad status code: \(httpResponse.statusCode)")
                 }
-                imageData = try await data
+                imageData = data
             }
         } catch {
             print("Image fetch error: \(error)")

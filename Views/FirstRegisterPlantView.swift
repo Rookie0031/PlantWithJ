@@ -18,6 +18,7 @@ struct FirstRegisterPlantView: View {
     @State private var species: String = ""
     @State private var birthday: Date = Date()
     @State private var isKeyboardVisible: Bool = false
+    @State private var isRegisterProgress: Bool = false
     @State private var newPlantData: PlantInformationModel = PlantInformationModel(
         imageData: Data(),
         name: "",
@@ -71,13 +72,19 @@ struct FirstRegisterPlantView: View {
             Button {
                 saveFirstPlantData()
                 setNotification()
-                navigateToNext = true
             } label: {
-                if name.isEmpty || species.isEmpty || selectedImageData == nil {
-                    BottomButtonInActive(title: "Next")
+                if !isRegisterProgress {
+                    // Check Required Data
+                    if name.isEmpty || species.isEmpty || selectedImageData == nil {
+                        BottomButtonInActive(title: "Next")
+                    } else {
+                        BottomButtonUI(title: "Next")
+                    }
                 } else {
-                    BottomButtonUI(title: "Next")
+                    ProgressView("🌿 Now registering your plant🌿")
+                        .frame(width: 300, height: 50, alignment: .center)
                 }
+                
             }
         }
         .navigationDestination(isPresented: $navigateToNext, destination: {
@@ -106,7 +113,6 @@ struct FirstRegisterPlantView: View {
         }
     }
     
-    //MARK: OnDisappear가 두번 실행되서 데이터 저장시 분기처리가 필요
     private func saveFirstPlantData() {
         newPlantData.imageData = selectedImageData ?? Data()
         newPlantData.name = name
@@ -115,7 +121,12 @@ struct FirstRegisterPlantView: View {
         newPlantData.wateringDay = viewModel.selectedRemindTimes.map({ WateringDay(dayText: $0.day, dateInfo: $0.time) })
         print(newPlantData.wateringDay)
         
-        Task { await FirebaseManager.shared.updatePlantProfile(with: newPlantData) }
+        Task {
+            isRegisterProgress = true
+            await FirebaseManager.shared.updatePlantProfile(with: newPlantData)
+            navigateToNext = true
+            isRegisterProgress = false
+        }
         
         if !storage.plantData.contains(where: { $0.id == newPlantData.id }) { storage.plantData.append(newPlantData)
         } else {

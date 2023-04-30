@@ -18,6 +18,7 @@ struct PlantProfileEditView: View {
     @State private var selectedImageData: Data? = nil
     @State private var editedName: String = ""
     @State private var species: String = ""
+    @State private var isUpdateProgress: Bool = false
     
     let data: PlantInformationModel
     
@@ -63,12 +64,15 @@ struct PlantProfileEditView: View {
             
             Spacer()
             
-            BottomButton(title: "Save") {
-                saveEditedInformation()
-                saveEditedNotification()
-                saveData(with: storage.plantData)
+            if !isUpdateProgress {
+                BottomButton(title: "Save") {
+                    saveEditedInformation()
+                    saveEditedNotification()
+                }
+            } else {
+                ProgressView("🌿 Now updating edited information🌿")
+                    .frame(width: 300, height: 50, alignment: .center)
             }
-            
         }
         .navigationTitle("Edit profile")
         .navigationBarTitleDisplayMode(.inline)
@@ -98,8 +102,10 @@ struct PlantProfileEditView: View {
         let updatingPlantData = storage.plantData[updatingPlantDataIndex]
         
         Task {
+            isUpdateProgress = true
             await FirebaseManager.shared.updatePlantProfile(with: updatingPlantData)
             self.presentationMode.wrappedValue.dismiss()
+            isUpdateProgress = false
         }
     }
     

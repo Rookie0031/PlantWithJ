@@ -18,7 +18,8 @@ struct LaunchScreen: View {
                 
                 Image("PlantWihJoy")
                     .resizable()
-                    .frame(width: 250, height: 250, alignment:.center)
+                    .scaledToFit()
+                    .frame(width: 330, height: 330, alignment: .center)
                 
                 VStack(alignment: .center, spacing: 7) {
                     Text("🌿 Grow your plant with joy 🌿")

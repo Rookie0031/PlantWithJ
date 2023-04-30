@@ -27,7 +27,7 @@ struct MyPlantView: View {
             if !storage.isDataFirstLoaded {
                 ProgressView("🍀 Now getting your plants! 🍀")
             }
-            else {
+            else if !storage.plantData.isEmpty {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 10) {
                         ForEach(storage.plantData, id: \.id) { plant in
@@ -112,6 +112,15 @@ struct MyPlantView: View {
                     }
                     .padding()
                 }
+            } else {
+                VStack(spacing: 20) {
+                    Text("🌱 Your garden is empty 🌱")
+                        .font(.titleText)
+                        .foregroundColor(.deepGreen)
+                    Text(" Add your own plant")
+                        .font(.titleText)
+                        .foregroundColor(.deepGreen)
+                }
             }
         }
         .onAppear(perform: {
@@ -140,8 +149,6 @@ struct MyPlantView: View {
                         RegisterNewPlantView(storage: storage, viewModel: DateSelectViewModel())
                     } label: {
                         Image(systemName: "plus.circle")
-                            .resizable()
-                            .frame(width: 22, height: 22, alignment: .center)
                             .foregroundColor(.deepGreen)
                     }
                     
@@ -149,8 +156,6 @@ struct MyPlantView: View {
                         SettingView(storage: storage)
                     } label: {
                         Image(systemName: "gearshape.circle")
-                            .resizable()
-                            .frame(width: 22, height: 22, alignment: .center)
                             .foregroundColor(.deepGreen)
                     }
                 }

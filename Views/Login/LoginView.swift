@@ -15,6 +15,8 @@ struct LoginView: View {
     @State private var showSignup: Bool = false
     @State private var isLoginSuccessful: Bool = false
     @State private var isLoginProgress: Bool = false
+    @State private var isKeyboardVisible: Bool = false
+    @State private var logInErrorMessage: String = ""
 
     var body: some View {
         
@@ -50,18 +52,35 @@ struct LoginView: View {
                     Button {
                         Task {
                             isLoginProgress = true
-                            let userId = await FirebaseManager.shared.signInUser(email: email, password: password) {
-                                isLoginSuccessful.toggle()
+                            let userId = await FirebaseManager.shared.login(email: email, password: password) { loginResult in
+                                switch loginResult {
+                                case .success(let loginResult):
+                                    isLoginSuccessful = loginResult
+                                case .failure(let error):
+                                    logInErrorMessage = error.localizedDescription
+                                }
+                                if !isLoginSuccessful { isLoginProgress = false }
                             }
-                            storage.userId = userId!
+                            if let userId { storage.userId = userId }
                         }
                     } label: {
-                        Text("Login")
-                            .frame(width: 300, height: 50, alignment: .center)
-                            .font(.buttonContent.bold())
-                            .foregroundColor(.white)
-                            .background(Color.deepGreen)
-                            .cornerRadius(30)
+                        if !isLoginProgress {
+                            Text("Login")
+                                .frame(width: 300, height: 50, alignment: .center)
+                                .font(.buttonContent.bold())
+                                .foregroundColor(.white)
+                                .background(Color.deepGreen)
+                                .cornerRadius(30)
+                        } else {
+                            ProgressView("🌿 Now Checking your id 🌿")
+                                .frame(width: 300, height: 50, alignment: .center)
+                        }
+                    }
+                    
+                    if isLoginSuccessful == false {
+                        Text(logInErrorMessage)
+                            .font(.basicText)
+                            .foregroundColor(.gray)
                     }
                     
                     Button("Don't have an account?", action: {
@@ -80,8 +99,16 @@ struct LoginView: View {
                     .environmentObject(storage)
                     .navigationBarBackButtonHidden(true)
             }
-            if isLoginProgress {
-                ProgressView("🌿 Now Checking your id🌿 ")
+        }
+        .onTapGesture { UIApplication.shared.endEditing() }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+            withAnimation {
+                isKeyboardVisible = true
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            withAnimation {
+                isKeyboardVisible = false
             }
         }
     }

@@ -15,7 +15,8 @@ struct DiaryWritingView: View {
     @State private var selectedImageData: Data? = nil
     @State private var diaryTitle: String = ""
     @State private var text: String = ""
-    @State private var isKeyboardVisible = false
+    @State private var isKeyboardVisible: Bool = false
+    @State private var isUploadingProgress: Bool = false
     let id: String
     
     var body: some View {
@@ -115,21 +116,29 @@ struct DiaryWritingView: View {
                 }
             }
             
-            if text.isEmpty || selectedImageData == nil {
-                BottomButtonInActive(title: "Save")
-                    .padding(.bottom, 10)
-            } else {
-                BottomButton(title: "Save") {
-                    Task {
-                        let newDiary: DiaryDataModel = DiaryDataModel(
-                            date: selectedDate, image: selectedImageData ?? Data(), diaryText: text, diaryTitle: diaryTitle)
-                        await FirebaseManager.shared.addPlantDiary(with: newDiary, plantId: id)
-                        storage.plantData = await FirebaseManager.shared.loadData()
-                        presentationMode.wrappedValue.dismiss()
+            if !isUploadingProgress {
+                if text.isEmpty || selectedImageData == nil {
+                    BottomButtonInActive(title: "Save")
+                        .padding(.bottom, 10)
+                } else {
+                    BottomButton(title: "Save") {
+                        Task {
+                            isUploadingProgress = true
+                            let newDiary: DiaryDataModel = DiaryDataModel(
+                                date: selectedDate, image: selectedImageData ?? Data(), diaryText: text, diaryTitle: diaryTitle)
+                            await FirebaseManager.shared.addPlantDiary(with: newDiary, plantId: id)
+                            storage.plantData = await FirebaseManager.shared.loadData()
+                            presentationMode.wrappedValue.dismiss()
+                            isUploadingProgress = false
+                        }
                     }
+                    .padding(.bottom, 10)
                 }
-                .padding(.bottom, 10)
+            } else {
+                ProgressView("📔 Now uploading new diary... 📔")
+                    .frame(width: 300, height: 50, alignment: .center)
             }
+            
         }
         .onTapGesture { UIApplication.shared.endEditing() }
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
@@ -142,9 +151,9 @@ struct DiaryWritingView: View {
                 isKeyboardVisible = false
             }
         }
+        .navigationBarHidden(isKeyboardVisible)
         .navigationTitle("New Diary")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarHidden(isKeyboardVisible)
     }
 }
 
