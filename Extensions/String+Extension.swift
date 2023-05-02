@@ -28,10 +28,12 @@ extension String {
         let dateFormatter = DateFormatter()
 
         // Set the date format
-        dateFormatter.dateFormat = "yyyy년 MM월 dd일 a hh:mm"
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+//        dateFormatter.dateFormat = "MMM d, yyyy h:mm a"
 
         // Set the locale to the user's device locale
-        dateFormatter.locale = Locale.current
+        dateFormatter.locale = .current
 
         // Attempt to parse the date string to a Date object
         return dateFormatter.date(from: self)

@@ -265,7 +265,7 @@ final class FirebaseManager: NSObject {
                     let dateInfo = wateringDayDoc["dateInfo"] as? [String] ?? []
                     
                     for index in 0..<dayText.count {
-                        let wateringDay = WateringDay(dayText: dayText[index], dateInfo: dateInfo[index].toDate()!)
+                        let wateringDay = WateringDay(dayText: dayText[index], dateInfo: dateInfo[index].toDate() ?? Date())
                         wateringDays.append(wateringDay)
                     }
                 }
