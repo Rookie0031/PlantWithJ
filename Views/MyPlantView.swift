@@ -182,6 +182,8 @@ struct MyPlantView: View {
     }
     
     private func deletePlant(with plantId: String) {
+        notificationCenter.removePendingNotificationRequests(withIdentifiers: [deletingPlantName])
+        
         Task {
             await FirebaseManager.shared.deletePlant(with: plantId)
         }

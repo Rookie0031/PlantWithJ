@@ -16,7 +16,7 @@ struct LaunchScreen: View {
                 
                 Spacer()
                 
-                Image("PlantWihJoy")
+                Image("LeafLogLaunchImage")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 330, height: 330, alignment: .center)

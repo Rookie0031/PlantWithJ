@@ -27,7 +27,7 @@ struct LoginView: View {
                 
                 VStack {
                     
-                    Image("PlantWihJoy")
+                    Image("LeafLogLaunchImage")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 330, height: 330, alignment: .center)
@@ -39,12 +39,18 @@ struct LoginView: View {
                 }
                 
                 TextField("Email", text: $email)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(width: 300)
+                    .textFieldStyle(CustomTextFieldStyle())
+                    .background(Color.mainGreen.opacity(0.3))
+                    .foregroundColor(.mainGreen)
+                    .frame(width: 250)
+                    .cornerRadius(20)
                 
                 SecureField("Password", text: $password)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(width: 300)
+                    .textFieldStyle(CustomTextFieldStyle())
+                    .background(Color.mainGreen.opacity(0.3))
+                    .foregroundColor(.mainGreen)
+                    .frame(width: 250)
+                    .cornerRadius(20)
                 
                 Spacer()
                 
@@ -66,14 +72,14 @@ struct LoginView: View {
                     } label: {
                         if !isLoginProgress {
                             Text("Login")
-                                .frame(width: 300, height: 50, alignment: .center)
+                                .frame(width: 250, height: 50, alignment: .center)
                                 .font(.buttonContent.bold())
                                 .foregroundColor(.white)
-                                .background(Color.deepGreen)
+                                .background(Color.deepGreen.opacity(0.7))
                                 .cornerRadius(30)
                         } else {
                             ProgressView("🌿 Now Checking your id 🌿")
-                                .frame(width: 300, height: 50, alignment: .center)
+                                .frame(width: 250, height: 50, alignment: .center)
                         }
                     }
                     
@@ -83,15 +89,18 @@ struct LoginView: View {
                             .foregroundColor(.gray)
                     }
                     
-                    Button("Don't have an account?", action: {
+                    Button {
                         showSignup.toggle()
-                    })
+                    } label: {
+                        Text("Don't have an account?")
+                            .foregroundColor(.mainGreen)
+                    }
                 }
                 .padding()
             }
             .padding()
             .frame(width: screenWidth, height: screenHeight, alignment: .center)
-            .background(Color.mainGreen.opacity(0.8))
+//            .background(Color.mainGreen.opacity(0.8))
             .toolbar(.hidden)
             .navigationDestination(isPresented: $showSignup) { SignupView() }
             .navigationDestination(isPresented: $isLoginSuccessful) {
